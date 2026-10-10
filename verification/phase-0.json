@@ -1,0 +1,49 @@
+{
+  "phase": 0,
+  "status": "complete",
+  "checkedAt": "2026-10-10T22:45:03.453Z",
+  "passed": [
+    "live_supabase_persistence",
+    "fresh_client_replay_suppression",
+    "concurrent_event_deduplication",
+    "cross_owner_access_rejected",
+    "private_image_upload_download",
+    "public_image_access_denied",
+    "rls_and_no_public_table_or_rpc_access",
+    "25_automated_tests",
+    "typescript_check",
+    "railway_node24_docker_build",
+    "https_health_check",
+    "real_iphone_text_reply_confirmed",
+    "real_image_persisted_247083_bytes",
+    "proactive_test_received_by_user",
+    "persisted_live_messages_after_host_restart"
+  ],
+  "pending": [],
+  "scopeChanges": [
+    "iCloud deferred by user; Google Calendar only",
+    "README stays empty; checkpoints stored as JSON"
+  ],
+  "deployment": {
+    "url": "https://wing-production-35b4.up.railway.app",
+    "projectId": "698e10c9-c988-4b04-80d4-84feb2ab2093",
+    "serviceId": "3aa51947-066e-431f-8963-c7b5328a0610",
+    "deploymentId": "fa1c9260-5a84-4830-bbe4-e2bd96fe22ca"
+  },
+  "securityNotes": [
+    "Server-only tables intentionally have RLS and no browser policies; anon/authenticated grants revoked.",
+    "Existing Photon OpenTelemetry dependency advisory remains; no critical/high advisories."
+  ],
+  "proactive": {
+    "supported": true,
+    "providerAccepted": true,
+    "userConfirmedReceipt": true,
+    "consent": "explicit /test-proactive command; ongoing notifications remain off"
+  },
+  "liveMessageCounts": {
+    "inboundText": 2,
+    "inboundImages": 1,
+    "outboundSent": 4
+  },
+  "completedAt": "2026-10-10T22:04:36.233Z"
+}

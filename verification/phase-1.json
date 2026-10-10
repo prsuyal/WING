@@ -1,0 +1,53 @@
+{
+  "phase": 1,
+  "status": "complete",
+  "checkedAt": "2026-10-10T22:50:52.687Z",
+  "passed": [
+    "real_claude_onboarding_and_immediate_database_fallback",
+    "tentative_facts_and_confirmed_corrections",
+    "two_trips_explicit_references_and_ambiguity",
+    "address_consent_and_temporary_pickup_isolation",
+    "real_database_ownership_and_stale_version_rejection",
+    "durable_indexing_retry_source_gating_and_private_content_exclusion",
+    "real_supermemory_contextual_retrieval_provenance_and_user_isolation",
+    "fresh_context_and_recreated_service_preserve_saved_facts",
+    "35_automated_tests",
+    "typescript_check",
+    "foundation_regression_checks",
+    "private_rls_and_revoked_browser_grants",
+    "synthetic_data_cleanup",
+    "railway_deployment_success",
+    "https_health_check",
+    "photon_listener_started"
+  ],
+  "integration": {
+    "claude": "real API",
+    "supabase": "real hosted database",
+    "supermemory": "real ingestion/profile/search",
+    "messaging": "captured transport; live Photon/iPhone verified in Phase 0"
+  },
+  "controls": [
+    "/fresh",
+    "/profile",
+    "/trips",
+    "/memory"
+  ],
+  "scopeChanges": [
+    "Google Calendar only; iCloud deferred",
+    "iMessage controls replace a separate demo dashboard"
+  ],
+  "pending": [],
+  "completedAt": "2026-10-10T22:53:02.029005+00:00",
+  "deployment": {
+    "url": "https://wing-production-35b4.up.railway.app",
+    "deploymentId": "3ab3d6a0-e4b4-4239-b577-1076a4e79326",
+    "serviceId": "3aa51947-066e-431f-8963-c7b5328a0610"
+  },
+  "nextPhase": "Phase 2: Google Calendar and schedule intake; iCloud deferred by user",
+  "manualFollowup": "Rehearse the newly deployed onboarding on the enrolled iPhone; this phase used a captured messaging transport and real backend APIs. Real Photon delivery was verified in Phase 0.",
+  "securityNotes": [
+    "Server-only Supabase tables have RLS; browser table and RPC grants revoked.",
+    "Only validated travel facts enter Supermemory. Addresses and raw messages remain private structured/database records.",
+    "Existing Photon dependency advisories recorded in Phase 0 remain."
+  ]
+}

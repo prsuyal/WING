@@ -1,0 +1,27 @@
+{
+  "name": "wing",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "check": "tsc --noEmit",
+    "test": "tsx --test src/*.test.ts",
+    "check:foundation": "tsx scripts/check-foundation.ts",
+    "check:phase-1": "tsx scripts/check-phase-1.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^4.0.78",
+    "@supabase/supabase-js": "2.117.3",
+    "ai": "^7.0.137",
+    "spectrum-ts": "^12.10.1",
+    "supermemory": "5.0.1",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "tsx": "^4",
+    "typescript": "^5"
+  }
+}

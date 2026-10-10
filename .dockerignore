@@ -1,0 +1,7 @@
+.env*
+node_modules
+.git
+assets
+verification
+README.md
+*.log

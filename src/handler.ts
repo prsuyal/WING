@@ -2,6 +2,7 @@ import type { Message, Space } from "spectrum-ts";
 import type { ModelMessage } from "ai";
 import { createHash } from "node:crypto";
 import { memoryNamespace, type Memory } from "./memory.ts";
+import { greeting } from "./onboarding.ts";
 import type { Actor } from "./contracts.ts";
 
 type Chat = Pick<Space, "id" | "responding"> & {
@@ -10,7 +11,7 @@ type Chat = Pick<Space, "id" | "responding"> & {
 };
 type Incoming = Pick<Message, "id" | "direction" | "content" | "sender">;
 
-export function createHandler(generate: (messages: ModelMessage[], context: string, actor?: Actor) => Promise<string>, memory: Memory, projectId: string) {
+export function createHandler(generate: (messages: ModelMessage[], context: string, actor?: Actor, recall?: () => Promise<string>) => Promise<string>, memory: Memory, projectId: string, interpretImage?: (bytes: Uint8Array, mimeType: string, actor: Actor) => Promise<string>) {
   // Recent conversation context is disposable; createService provides persistent event deduplication.
   const history = new Map<string, ModelMessage[]>();
   const seen = new Set<string>();
@@ -29,12 +30,24 @@ export function createHandler(generate: (messages: ModelMessage[], context: stri
         await space.send("please send an image smaller than 5 MB.");
         return;
       }
+      let data: Uint8Array;
       try {
-        const data = await message.content.read();
+        data = await message.content.read();
         if (!data.length || data.length > maxBytes) throw new Error("Invalid image size");
         console.log(JSON.stringify({ event: "image_downloaded", bytes: data.length, mimeType: message.content.mimeType }));
       } catch {
         await space.send("i couldn't download that image. try a smaller PNG or JPEG.");
+        return;
+      }
+      if (interpretImage && actor) {
+        await space.responding(async () => {
+          let preview: string;
+          try { preview = await interpretImage(data, message.content.type === "attachment" ? message.content.mimeType : "", actor); }
+          catch { preview = "i couldn't read a clear schedule from that image. send a legible PNG/JPEG schedule, or text the days, times, dates and time zone. nothing was confirmed."; }
+          await space.send(preview);
+          history.set(historyKey, [...(history.get(historyKey) ?? []), { role: "user" as const, content: "I sent an image for schedule interpretation." }, { role: "assistant" as const, content: preview }].slice(-20));
+          if (history.size > 100) history.delete(history.keys().next().value!);
+        });
         return;
       }
       await space.send("got your image — Photon download works. schedule interpretation isn't connected yet.");
@@ -59,16 +72,20 @@ export function createHandler(generate: (messages: ModelMessage[], context: stri
     }
     const messages: ModelMessage[] = [...(history.get(historyKey) ?? []), { role: "user", content: text }];
     await space.responding(async () => {
-      let context = "";
-      try {
-        // Search queries must not forward raw addresses, credentials or calendar text to Supermemory.
-        context = await memory.recall(namespace, "travel preferences, home and departure airports, budget, arrival before dinner with family");
-      } catch {
-        console.error("Supermemory recall failed; continuing without memory. No private content or credentials logged.");
-      }
+      if (/\b(search|find|look for|plan)\b/i.test(text) && /\b(flights?|trip)\b/i.test(text)) await space.send("on it ✈️");
+      const recall = async () => {
+        if (messages.length <= 1 || greeting.test(text) || text.startsWith("/")) return "";
+        try {
+          // Raw addresses, credentials and calendar text never become memory queries.
+          return await memory.recall(namespace, "current general travel preferences");
+        } catch {
+          console.error("Supermemory recall failed; continuing without memory. No private content or credentials logged.");
+          return "";
+        }
+      };
       let reply: string;
       try {
-        reply = await generate(messages, context, actor);
+        reply = await generate(messages, "", actor, recall);
       } catch {
         console.error("Claude request failed; no private content or credentials logged.");
         await space.send("i couldn't reach Claude just now. please try again in a moment.");

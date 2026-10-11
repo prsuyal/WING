@@ -1,0 +1,27 @@
+{
+  "phase": 7,
+  "status": "automated_checks_passed",
+  "checkedAt": "2026-10-11T05:26:05.185Z",
+  "simulatedFlightPrices": true,
+  "deliveryTransport": "captured; no human messaged by automated checks",
+  "googleCalendar": "controlled API with real persistence and approval flow",
+  "checks": [
+    "watch_ownership_exact_price_binding_explicit_and_separate_notification_consent",
+    "synthetic_price_advances_normal_comparison_worker_unchanged_suppression_and_fresh_booking_prices",
+    "quiet_hours_cooldown_stale_notice_expiry_and_on_demand_reply",
+    "trip_mute_and_global_stop_persist_across_worker_restart_without_cancelling_travel",
+    "concurrent_claims_expired_job_recovery_and_price_change_during_processing",
+    "pre_send_failure_retries_but_uncertain_send_never_duplicates_after_restart",
+    "crash_after_send_started_recovers_as_unknown_without_resending",
+    "price_change_between_claim_and_send_cancels_stale_quote",
+    "unknown_calendar_and_changed_trip_suppress_alerts_demo_controls_are_account_restricted",
+    "durable_text_reminders_separate_real_calendar_review_popup_readback_and_duplicate_suppression",
+    "real_claude_watch_consent_short_on_demand_reply_and_trip_mute_end_to_end"
+  ],
+  "pending": [
+    "Railway deployment and live on-demand price-watch checkpoint"
+  ],
+  "deferred": [
+    "Phase 6 parent frontend and sharing links"
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "status": "deployed_awaiting_user_checkpoint",
+  "checkedAt": "2026-10-11T06:06:13.574160+00:00",
+  "checks": [
+    "first_time_intro_multi_preference_answer_skip_and_resume_after_agent_restart",
+    "onboarding_replay_preserves_known_preferences_without_deleting_trips_or_memory",
+    "real_us_search_persists_complete_round_trip_and_honest_unchecked_schedule_and_baggage",
+    "real_quote_selection_separate_casual_approval_demo_reservation_and_duplicate_suppression",
+    "real_itinerary_watch_checks_consents_labels_and_rejects_synthetic_price_changes"
+  ],
+  "liveSearch": [
+    "RDU-EWR",
+    "JFK-LHR",
+    "CLT-DFW"
+  ],
+  "bookings": "simulated only",
+  "transport": "captured; no human messaged",
+  "pending": [
+    "Phone walkthrough of natural flight reviews, simulated pickup approval and separate Google Calendar consent"
+  ],
+  "unitTests": 117,
+  "generatedProviderCases": 3420,
+  "conversationChecks": [
+    "onboarding_calendar_cheapest_airport_scope_upcoming_cross_year_real_search",
+    "rough_target_saved_once_without_reconfirmation",
+    "first_message_request_preserved_calendar_nudge_delivery_bound_review_and_casual_approval"
+  ],
+  "onboardingServerProcessingMs": {
+    "hello": 298,
+    "origin": 278,
+    "roughBudget": 251
+  },
+  "testCleanup": {
+    "archivedTrips": 3,
+    "tripMemoryNamespacesCleared": 3,
+    "calendarConnectionPreserved": true,
+    "pendingTestJobs": 0,
+    "activeTestWatches": 0,
+    "disposableUsersRemaining": 0
+  },
+  "memory": "validated current profile snapshots; legacy chat memory excluded",
+  "ridePricing": "$32 explicitly simulated airport ride fare with estimated driving and airport buffers; no real Uber fare API",
+  "deploymentId": "97c37d6f-7f4f-4a15-9940-330774bba291",
+  "deploymentStatus": "SUCCESS",
+  "accountReset": {
+    "completedAt": "2026-10-11T05:01:02.900303+00:00",
+    "usersReset": 1,
+    "memoryNamespacesCleared": 3,
+    "matchingMemoryNamespacesRemaining": 0,
+    "privateImagesRemoved": 0,
+    "remainingUserState": 0,
+    "externalGoogleEventsDeleted": false,
+    "photonEnrollmentPreserved": true,
+    "publicFlightCacheAndApiUsagePreserved": true,
+    "processRestarted": true
+  },
+  "calendarConversationChecks": [
+    "done_lists_choices_and_plain_number_survives_restart_and_google_reordering",
+    "multiple_numbers_name_and_primary_select_real_saved_ids",
+    "invalid_numbers_other_owners_intervening_questions_and_unknown_delivery_never_select",
+    "calendar_selection_resumes_onboarding_without_claude_or_slash_commands"
+  ],
+  "calendarRegressionChecks": 6,
+  "textingChecks": {
+    "bookings": [
+      "exact_delivered_review_separate_approval_owner_calendar_concurrency_and_duplicate_guards",
+      "failed_or_unknown_offer_delivery_cannot_be_selected",
+      "ya_and_yup_approve_exact_review_and_recover_intervening_error_without_stale_or_duplicate_approval",
+      "declined_review_cannot_be_approved_or_create_a_reservation",
+      "expired_review_and_changed_offer_total_or_version_require_reapproval",
+      "provider_failure_lost_response_reconciliation_and_safe_retry_without_duplicates",
+      "changes_between_approval_and_commit_reject_stale_terms_and_allow_a_fresh_review",
+      "outbound_departure_passing_before_commit_cannot_create_a_reservation",
+      "real_claude_short_recommendation_baggage_question_thanks_and_restart_selection_without_repeating_search",
+      "real_claude_selection_exact_review_iMessage_approval_and_restart_replay"
+    ],
+    "journeys": [
+      "ride_ownership_exact_delivery_separate_approval_concurrency_and_duplicate_guards",
+      "temporary_pickup_is_trip_scoped_stale_review_rejected_and_private_addresses_excluded_from_memory",
+      "declined_expired_changed_payment_or_post_approval_tampered_terms_never_reserve",
+      "ride_failure_lost_responses_and_pickup_race_recover_without_duplicate_reservation",
+      "calendar_needs_separate_approval_and_writes_all_demo_events_once_with_readback",
+      "google_insert_conflict_is_reconciled_by_exact_readback_without_a_duplicate",
+      "calendar_partial_success_survives_restart_and_reuses_stable_event_ids",
+      "revoked_or_changed_calendar_access_blocks_writes_and_existing_mismatched_events_are_never_modified",
+      "adding_a_ride_later_adds_only_the_pickup_event_without_duplicate_flights",
+      "real_claude_full_flight_to_ride_to_calendar_journey_separate_approvals_and_restart",
+      "delivered_invitation_remains_bound_to_its_booked_trip_when_active_trip_changes",
+      "live_quote_natural_flight_review_simulated_ride_separate_calendar_approvals_and_no_duplicates",
+      "international_natural_approval_verified_before_delivery"
+    ],
+    "calendarChoices": [
+      "done_lists_choices_and_plain_number_survives_restart_and_google_reordering",
+      "multiple_numbers_name_and_primary_select_real_saved_ids",
+      "invalid_numbers_other_owners_intervening_questions_and_unknown_delivery_never_select",
+      "calendar_selection_resumes_onboarding_without_claude_or_slash_commands",
+      "single_calendar_accepts_yup_and_multiple_selected_calendars_write_only_to_the_reviewed_primary"
+    ],
+    "calendarAndVision": [
+      "oauth_state_pkce_cookie_origin_expiry_replay_and_encrypted_owner_binding",
+      "paginated_calendar_reads_and_revoked_credentials_become_unknown",
+      "approved_exact_review_calendar_write_readback_and_duplicate_owner_checks",
+      "uncertain_write_reconciliation_readonly_and_stale_selection_rejection",
+      "real_claude_text_intake_and_vision_with_separate_preview_confirmation",
+      "restart_schedule_ownership_stale_confirmation_and_schedule_memory_exclusion"
+    ],
+    "watchesAndReminders": [
+      "watch_ownership_exact_price_binding_explicit_and_separate_notification_consent",
+      "synthetic_price_advances_normal_comparison_worker_unchanged_suppression_and_fresh_booking_prices",
+      "quiet_hours_cooldown_stale_notice_expiry_and_on_demand_reply",
+      "trip_mute_and_global_stop_persist_across_worker_restart_without_cancelling_travel",
+      "concurrent_claims_expired_job_recovery_and_price_change_during_processing",
+      "pre_send_failure_retries_but_uncertain_send_never_duplicates_after_restart",
+      "crash_after_send_started_recovers_as_unknown_without_resending",
+      "price_change_between_claim_and_send_cancels_stale_quote",
+      "unknown_calendar_and_changed_trip_suppress_alerts_demo_controls_are_account_restricted",
+      "durable_text_reminders_separate_real_calendar_review_popup_readback_and_duplicate_suppression",
+      "real_claude_watch_consent_short_on_demand_reply_and_trip_mute_end_to_end"
+    ]
+  },
+  "rideIntegration": "simulated future airport pickup for both real flight quotes and synthetic inventory, separate approval, then invitation for real Google Calendar entries",
+  "accountsResetForThisChange": false,
+  "healthStatus": 200,
+  "instances": 1,
+  "textingEndToEndGroups": 45,
+  "privateFixtureCalendarConnectionsRemaining": 0,
+  "unitChecks": 117,
+  "model": "claude-sonnet-5-5",
+  "conversationLanguageCases": 18,
+  "onboardingLanguageGroups": 2,
+  "conversation": {
+    "interpretation": "Sonnet for ordinary onboarding, preferences, choices, factual questions and consent; legacy parsers only for developer commands/direct fixture callers",
+    "messageBoundaries": "one complete thought or sentence per bubble; natural generated travel messages normalized before review validation and storage",
+    "fixedText": "first introduction, tool failures, verified confirmation fallback during a model outage, and legacy developer utilities",
+    "promptCache": "stable system/tool prefix cached; variable state and clock kept outside cached prefix",
+    "onboarding": "profile updates return next unknown preference in the same tool result; optional calendar link tested; no inferred home-visit destination from departure airport",
+    "consent": "isolated model interpretation plus existing delivery, ownership, version, expiry and deduplication checks",
+    "livePhoneVerification": "pending after this deployment",
+    "travelPresentation": "Sonnet writes flight search results, approval reviews, ride confirmations and calendar replies from verified notes; independent factual check before a new review is persisted",
+    "confirmationSafety": "wording failure cannot change a verified successful booking, ride or calendar write into an uncertain outcome"
+  },
+  "naturalTravelChecks": {
+    "backendAndConversationGroups": 23,
+    "finalSonnetPresentationCases": 3,
+    "international": "overnight EWR-BCN return with exact local dates/times, flight numbers, $950 total and unknown baggage fees",
+    "realQuoteRide": "simulated ride followed by independently approved flight and pickup calendar entries, with duplicate suppression",
+    "logs": [
+      "/tmp/wing-natural-tests.log",
+      "/tmp/wing-natural-phase4.log",
+      "/tmp/wing-natural-phase5.log",
+      "/tmp/wing-natural-final-language.log"
+    ]
+  }
+}

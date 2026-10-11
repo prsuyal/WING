@@ -11,6 +11,12 @@ export function tripMemoryNamespace(userNamespace: string, tripId: string) {
   return `wing_trip_${createHash("sha256").update(JSON.stringify([userNamespace, tripId])).digest("hex")}`;
 }
 
+export function profileMemoryNamespace(userNamespace: string) {
+  if (!/^[a-zA-Z0-9_:-]{1,100}$/.test(userNamespace)) throw new Error("Invalid memory namespace");
+  // Legacy chat ingestion included assistant suggestions; only validated profile snapshots belong here.
+  return `wing_profile_${createHash("sha256").update(userNamespace).digest("hex")}`;
+}
+
 export type Memory = {
   recall(namespace: string, query: string): Promise<string>;
   remember(namespace: string, exchange: { id: string; text: string; reply: string }): Promise<void>;
@@ -24,10 +30,11 @@ export function createMemory(client: Pick<Supermemory, "profile" | "search" | "a
   return {
     async recall(namespace, query) {
       validate(namespace);
+      const profileNamespace = profileMemoryNamespace(namespace);
       const options = { timeoutInSeconds: 3, maxRetries: 0 };
       const [profile, search] = await Promise.allSettled([
-        client.profile(namespace, {}, options),
-        client.search(namespace, { query, limit: 5, searchMode: "hybrid", include: { forgotten: false } }, options),
+        client.profile(profileNamespace, {}, options),
+        client.search(profileNamespace, { query, limit: 5, searchMode: "hybrid", include: { forgotten: false } }, options),
       ]);
       const facts: string[] = [];
       if (profile.status === "fulfilled") {

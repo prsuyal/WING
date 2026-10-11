@@ -9,10 +9,21 @@
     "check": "tsc --noEmit",
     "test": "tsx --test src/*.test.ts",
     "check:foundation": "tsx scripts/check-foundation.ts",
-    "check:phase-1": "tsx scripts/check-phase-1.ts"
+    "check:phase-1": "tsx scripts/check-phase-1.ts",
+    "check:phase-2": "tsx scripts/check-phase-2.ts",
+    "check:phase-3": "tsx scripts/check-phase-3.ts",
+    "check:phase-4": "tsx scripts/check-phase-4.ts",
+    "check:phase-5": "tsx scripts/check-phase-5.ts",
+    "check:phase-7": "tsx scripts/check-phase-7.ts",
+    "check:live-search": "tsx scripts/check-live-search.ts",
+    "check:product": "tsx scripts/check-product.ts",
+    "check:conversation": "tsx scripts/check-conversation.ts",
+    "check:language": "tsx scripts/check-language.ts",
+    "check:calendar-conversation": "tsx scripts/check-calendar-conversation.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.78",
+    "@js-temporal/polyfill": "0.5.1",
     "@supabase/supabase-js": "2.117.3",
     "ai": "^7.0.137",
     "spectrum-ts": "^12.10.1",

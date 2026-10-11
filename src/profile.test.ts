@@ -49,8 +49,10 @@ test("invalid date updates, class permission and address consent never reach the
   await assert.rejects(store.patch(actor, { returnDate: "2026-10-22" }, "confirmed", home), /Return date/);
   await assert.rejects(store.patch(actor, { allowMissedCommitments: true }, "confirmed", home), /Explicit permission/);
   await assert.rejects(store.patch({ ...actor, sourceText: "do not skip classes for this trip" }, { allowMissedCommitments: true }, "confirmed", home), /Explicit permission/);
+  await assert.rejects(store.patch({ ...actor, sourceText: "Can I miss class for this trip?" }, { allowMissedCommitments: true }, "confirmed", home), /Explicit permission/);
   await assert.rejects(store.proposeAddress(actor, "campus", "123 Main Street"), /exact address/);
   await assert.rejects(store.confirmAddress({ ...actor, sourceText: "maybe" }, home.id), /Explicit address-saving consent/);
+  await assert.rejects(store.confirmAddress({ ...actor, sourceText: "book it" }, home.id), /Explicit address-saving consent/);
   await assert.rejects(store.pickupOverride(actor, home, "the library"), /current user message/);
   assert.equal(requests, 0);
 });

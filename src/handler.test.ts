@@ -30,6 +30,19 @@ test("DM replies use recent history and suppress duplicate events", async () => 
   assert.equal(calls[1]?.length, 3);
 });
 
+test("a delivered image preview is present in the next confirmation's conversation context", async () => {
+  const calls: ModelMessage[][] = [];
+  const actor = { userId: "00000000-0000-4000-8000-000000000001", sourceMessageId: "00000000-0000-4000-8000-000000000002", namespace: "wing_user_test", sourceText: "" };
+  const handle = createHandler(async (messages) => { calls.push(messages); return "confirmed"; }, emptyMemory, "test-project", async () => "schedule preview: Monday 09:00–10:00. reply yes to confirm.");
+  const dm = chat("dm");
+  const content = { type: "attachment" as const, id: "image", name: "schedule.png", mimeType: "image/png", size: 3, read: async () => Buffer.from("png"), stream: async () => new ReadableStream() };
+  await handle(dm, { ...message("image", ""), content }, actor);
+  await handle(dm, message("confirmation", "yes"), { ...actor, sourceText: "yes" });
+  assert.equal(calls[0]?.length, 3);
+  assert.match(String(calls[0]?.[1]?.content), /schedule preview/);
+  assert.equal(calls[0]?.[2]?.content, "yes");
+});
+
 test("group messages never reach Claude or personal memory", async () => {
   const calls: ModelMessage[][] = [];
   let recalls = 0;
@@ -42,7 +55,7 @@ test("group messages never reach Claude or personal memory", async () => {
   await handle(group, message("3", "wing help us plan"));
   assert.equal(group.replies.length, 0);
   assert.equal(calls.length, 1);
-  assert.equal(recalls, 1);
+  assert.equal(recalls, 0);
 });
 
 test("outbound and anonymous messages do not reach Claude", async () => {
@@ -95,7 +108,7 @@ test("successful delivery is saved once, after sending, with a stable document I
   assert.equal(saves[0]![1].reply, "got it");
 });
 
-test("a restarted handler recalls saved context while local history is empty", async () => {
+test("a restarted handler uses durable database state without waiting for historical memory on its first reply", async () => {
   const stored = new Map<string, string>();
   const memory: Memory = {
     recall: async (namespace) => stored.get(namespace) ?? "",
@@ -104,7 +117,7 @@ test("a restarted handler recalls saved context while local history is empty", a
   await createHandler(async () => "got it", memory, "test-project")(chat("dm"), message("1", "my home airport is RDU"));
   const restarted = createHandler(async (messages, context) => {
     assert.deepEqual(messages, [{ role: "user", content: "which airport is home?" }]);
-    assert.equal(context, "my home airport is RDU");
+    assert.equal(context, "");
     return "RDU";
   }, memory, "test-project");
   const dm = chat("dm");
@@ -116,8 +129,8 @@ test("different senders cannot share memory or recent history even with the same
   const namespaces: string[] = [];
   const stored = new Map<string, string>();
   const memory: Memory = {
-    recall: async (namespace) => { namespaces.push(namespace); return stored.get(namespace) ?? ""; },
-    remember: async (namespace, exchange) => { stored.set(namespace, exchange.text); },
+    recall: async (namespace) => stored.get(namespace) ?? "",
+    remember: async (namespace, exchange) => { namespaces.push(namespace); stored.set(namespace, exchange.text); },
   };
   let calls = 0;
   const handle = createHandler(async (messages, context) => {
@@ -141,15 +154,15 @@ test("memory outages preserve replies and short-term history without logging pri
     remember: async () => { throw new Error("secret-key and private-memory"); },
   };
   const lengths: number[] = [];
-  const handle = createHandler(async (messages, context) => {
-    lengths.push(messages.length); assert.equal(context, ""); return "hello";
+  const handle = createHandler(async (messages, _context, _actor, recall) => {
+    const context = await recall!(); lengths.push(messages.length); assert.equal(context, ""); return "hello";
   }, memory, "test-project");
   const dm = chat("dm");
   await handle(dm, message("1", "hi"));
   await handle(dm, message("2", "hi again"));
   assert.deepEqual(dm.replies, ["hello", "hello"]);
   assert.deepEqual(lengths, [1, 3]);
-  assert.equal(logs.length, 4);
+  assert.equal(logs.length, 3);
   assert.doesNotMatch(logs.join("\n"), /secret-key|private-memory/);
 });
 
@@ -189,14 +202,34 @@ test("fresh context clears recent history while retaining saved memory", async (
   await handle(dm, message("2", "/fresh"));
   await handle(dm, message("3", "where is home?"));
   assert.deepEqual(lengths, [1, 1]);
-  assert.deepEqual(contexts, ["home airport EWR", "home airport EWR"]);
+  assert.deepEqual(contexts, ["", ""]);
   assert.match(String(dm.replies[1]), /saved preferences/);
+});
+
+test("first hello and onboarding commands never wait for historical memory", async () => {
+  let recalls = 0;
+  const handle = createHandler(async () => "hey!", { ...emptyMemory, recall: async () => { recalls++; throw new Error("Should not wait for memory"); } }, "test-project");
+  const dm = chat("dm");
+  await handle(dm, message("1", "hello"));
+  await handle(dm, message("2", "/onboard"));
+  assert.equal(recalls, 0);
+  assert.deepEqual(dm.replies, ["hey!", "hey!"]);
+});
+
+test("flight searches acknowledge immediately before the slow model/provider call and keep one final reply", async () => {
+  const dm = chat("dm");
+  const handle = createHandler(async () => { assert.deepEqual(dm.replies, ["on it ✈️"]); return "found a real flight"; }, emptyMemory, "test-project");
+  await handle(dm, message("1", "find me a flight from CLT to DFW"));
+  assert.deepEqual(dm.replies, ["on it ✈️", "found a real flight"]);
+  await handle(dm, message("1", "find me a flight from CLT to DFW"));
+  assert.equal(dm.replies.length, 2);
 });
 
 test("raw private messages never become Supermemory search queries", async () => {
   const queries: string[] = [];
-  const handle = createHandler(async () => "got it", { ...emptyMemory, recall: async (_namespace, query) => { queries.push(query); return ""; } }, "test-project");
+  const handle = createHandler(async (_messages, _context, _actor, recall) => { await recall!(); return "got it"; }, { ...emptyMemory, recall: async (_namespace, query) => { queries.push(query); return ""; } }, "test-project");
   await handle(chat("dm"), message("1", "my address is 123 Main Street and my password is secret"));
+  await handle(chat("dm"), message("2", "remember my airport?"));
   assert.equal(queries.length, 1);
   assert.doesNotMatch(queries[0]!, /123 Main Street|password|secret/);
 });

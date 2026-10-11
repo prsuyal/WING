@@ -1,0 +1,81 @@
+{
+  "phase": 5,
+  "status": "complete",
+  "checkedAt": "2026-10-11T05:58:51.797Z",
+  "passed": [
+    "ride_ownership_exact_delivery_separate_approval_concurrency_and_duplicate_guards",
+    "temporary_pickup_is_trip_scoped_stale_review_rejected_and_private_addresses_excluded_from_memory",
+    "declined_expired_changed_payment_or_post_approval_tampered_terms_never_reserve",
+    "ride_failure_lost_responses_and_pickup_race_recover_without_duplicate_reservation",
+    "calendar_needs_separate_approval_and_writes_all_demo_events_once_with_readback",
+    "google_insert_conflict_is_reconciled_by_exact_readback_without_a_duplicate",
+    "calendar_partial_success_survives_restart_and_reuses_stable_event_ids",
+    "revoked_or_changed_calendar_access_blocks_writes_and_existing_mismatched_events_are_never_modified",
+    "adding_a_ride_later_adds_only_the_pickup_event_without_duplicate_flights",
+    "real_claude_full_flight_to_ride_to_calendar_journey_separate_approvals_and_restart",
+    "delivered_invitation_remains_bound_to_its_booked_trip_when_active_trip_changes",
+    "live_quote_natural_flight_review_simulated_ride_separate_calendar_approvals_and_no_duplicates",
+    "international_natural_approval_verified_before_delivery"
+  ],
+  "privateTestUsersRemoved": true,
+  "simulated": [
+    "rides",
+    "ride fare",
+    "driving time",
+    "flight reservation",
+    "payment"
+  ],
+  "integrations": {
+    "database": "real hosted Supabase",
+    "model": "real Claude API",
+    "google": "real HTTP client against controlled Google responses; live itinerary gate pending",
+    "photon": "captured transport; live ride/calendar phone gate pending"
+  },
+  "calendarSafety": "stable IDs and exact readback; private transparent [simulated] entries without attendees or default reminders; no modifying or deleting other events",
+  "scope": {
+    "rides": "simulated future outbound airport pickups for real flight quotes or synthetic inventory; never real dispatch",
+    "iCloud": "deferred by user"
+  },
+  "pending": [
+    "Live iMessage ride approval and separate real Google itinerary write/readback"
+  ],
+  "automatedTests": {
+    "passed": 77,
+    "failed": 0,
+    "typeCheck": "passed"
+  },
+  "regression": {
+    "phase4Groups": 10,
+    "result": "passed"
+  },
+  "databaseSecurity": {
+    "rlsEnabled": true,
+    "unexpectedBrowserGrants": 0,
+    "unexpectedBrowserFunctionGrants": 0,
+    "advisors": "INFO only; backend-only tables intentionally have no browser policies"
+  },
+  "liveGoogleReadiness": {
+    "checkedAt": "2026-10-11T02:00:00.678Z",
+    "oneOwnedCalendar": true,
+    "writeScopeGranted": true,
+    "eventsCreated": 0
+  },
+  "deployment": {
+    "id": "e4711454-6303-466f-aac3-4d3738cac8e9",
+    "status": "SUCCESS",
+    "healthStatus": 200,
+    "checkedAt": "2026-10-11T02:02:01.918Z",
+    "publicBaseUrl": "https://wing-production-35b4.up.railway.app",
+    "iMessageListenerStarted": true
+  },
+  "livePhone": {
+    "rideApproval": "confirmed by user and database",
+    "calendarApproval": "confirmed by user and database",
+    "checkedAt": "2026-10-11T02:03:40.467Z"
+  },
+  "liveCalendar": {
+    "eventsReadBack": 3,
+    "unrelatedEventsModified": 0
+  },
+  "migrationHistoryAligned": true
+}

@@ -1,8 +1,8 @@
 import { z } from "zod";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Supermemory } from "supermemory";
-import { profilePatchSchema, tripPatchSchema } from "./profile.ts";
-import { tripMemoryNamespace } from "./memory.ts";
+import { confirmedFacts, profilePatchSchema, tripPatchSchema } from "./profile.ts";
+import { profileMemoryNamespace, tripMemoryNamespace } from "./memory.ts";
 
 const documentSchema = z.object({ currentTravelFacts: z.unknown(), tripId: z.uuid().nullable(), version: z.number().int().positive() }).strict();
 export function permittedMemory(content: string) {
@@ -22,8 +22,14 @@ export function createMemoryWorker(client: SupabaseClient, memory: { add: (...ar
           const permitted = permittedMemory(document.content);
           const { data: owner, error: ownerError } = await client.from("wing_users").select("identity_key").eq("id", document.owner_id).single();
           if (ownerError || !owner) throw new Error("Memory owner unavailable");
-          const namespace = permitted.tripId ? tripMemoryNamespace(owner.identity_key, permitted.tripId) : owner.identity_key;
-          await memory.add(namespace, { id: document.document_id, content: JSON.stringify(permitted), taskType: "memory", dreaming: "instant",
+          const namespace = permitted.tripId ? tripMemoryNamespace(owner.identity_key, permitted.tripId) : profileMemoryNamespace(owner.identity_key);
+          if (!permitted.tripId) {
+            const { data: profile, error } = await client.from("wing_profiles").select("facts,version").eq("owner_id", document.owner_id).single();
+            if (error || !profile) throw new Error("Current profile unavailable");
+            permitted.currentTravelFacts = profilePatchSchema.parse(confirmedFacts(profile.facts));
+            permitted.version = profile.version;
+          }
+          await memory.add(namespace, { id: permitted.tripId ? document.document_id : `profile_${document.owner_id}`, content: JSON.stringify(permitted), taskType: "memory", dreaming: "instant",
             metadata: { sourceMessageId: document.source_message_id, scope: permitted.tripId ? "trip" : "profile" },
             supportingContext: "These are permitted travel facts from the user's own message. A newer version replaces older values. Trip-specific facts apply only to this trip, never the general profile. No address, payment, credentials or calendar contents are included." },
           { timeoutInSeconds: 8, maxRetries: 0 });

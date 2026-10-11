@@ -4,6 +4,10 @@ import type { Database } from "./database.ts";
 import { createService } from "./service.ts";
 import { createHandler } from "./handler.ts";
 import type { Memory } from "./memory.ts";
+import { createBookings } from "./booking.ts";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { FlightPlanner } from "./flight-store.ts";
+import type { ProfileStore } from "./profile.ts";
 
 const owner = "00000000-0000-4000-8000-000000000001";
 const inbound = "00000000-0000-4000-8000-000000000002";
@@ -66,6 +70,17 @@ test("image bytes are privately saved before acknowledging access", async () => 
   assert.ok(events.includes("handled"));
 });
 
+test("an uncertain schedule-preview send never triggers a second fallback reply", async () => {
+  const { database, chat, message, events } = fixture();
+  let sends = 0;
+  chat.send = async () => { sends++; throw new Error("provider timeout after accepting text"); };
+  const handler = createHandler(async () => "unused", { recall: async () => "", remember: async () => {} }, "project", async () => "schedule preview");
+  const content = { type: "attachment" as const, id: "image", name: "schedule.png", mimeType: "image/png", size: 3, read: async () => Buffer.from("png"), stream: async () => new ReadableStream() };
+  await assert.rejects(createService(database, "project", handler)(chat, { ...message, content }));
+  assert.equal(sends, 1);
+  assert.ok(events.includes("delivery_unknown"));
+});
+
 test("group, outbound and anonymous messages never create owner records", async () => {
   const { database, chat, message, events } = fixture();
   const service = createService(database, "project", async () => { assert.fail("Ignored message"); });
@@ -81,4 +96,46 @@ test("each outgoing effect gets its own stable sequence for acknowledgments and 
   database.prepareReply = async (_received, _space, _text, index) => { indices.push(index); return outbound; };
   await createService(database, "project", async (space) => { await space.send("ack"); await space.send("probe"); })(chat, message);
   assert.deepEqual(indices, [0, 1]);
+});
+
+test("a split review is recorded once and sent only after all bubbles are accepted", async () => {
+  const { database, chat, message, events } = fixture();
+  const review = "Save this for $300?\n\nEWR → SFO\n\nSimulated booking, no real ticket or charge\nreply yes";
+  const sent: string[] = [];
+  database.prepareReply = async (_owner, _space, text) => { assert.equal(text, review); events.push("prepare"); return outbound; };
+  chat.send = async (text) => { assert.ok(!events.includes("sent")); sent.push(text); events.push("send"); };
+  await createService(database, "project", async (space) => { await space.send(review); })(chat, message);
+  assert.equal(sent.length, 4);
+  assert.deepEqual(events, ["receive", "prepare", "send", "send", "send", "send", "sent", "handled"]);
+});
+
+test("a partial multi-bubble review stays unconfirmed and does not send its remaining bubbles", async () => {
+  const { database, chat, message, events } = fixture();
+  let sends = 0;
+  chat.send = async () => { if (++sends === 2) throw new Error("delivery uncertain"); };
+  const service = createService(database, "project", async (space) => { await space.send("price\n\nterms\n\nreply yes"); });
+  await assert.rejects(service(chat, message)); await service(chat, message);
+  assert.equal(sends, 2); assert.ok(events.includes("delivery_unknown")); assert.ok(!events.includes("sent"));
+});
+
+test("a yes arriving between review bubbles cannot become approval after delivery finishes", async () => {
+  const { database, chat, message } = fixture();
+  let began!: () => void, finish!: () => void;
+  const started = new Promise<void>((resolve) => { began = resolve; });
+  const held = new Promise<void>((resolve) => { finish = resolve; });
+  chat.send = async () => { began(); await held; };
+  const bookings = createBookings({} as SupabaseClient, {} as ProfileStore, {} as FlightPlanner);
+  let blocked = false;
+  const service = createService(database, "project", async (space, incoming, actor) => {
+    if (incoming.id === message.id) await space.send("terms\n\nreply yes");
+    else {
+      assert.equal(actor.replyInFlight, true);
+      await assert.rejects(bookings.approve({ ...actor, interpret: async () => true }, "00000000-0000-4000-8000-000000000001"), /separate yes/);
+      blocked = true;
+    }
+  });
+  const first = service(chat, message); await started;
+  await service(chat, { ...message, id: "early", content: { type: "text", text: "yes book" } });
+  assert.equal(blocked, true);
+  finish(); await first;
 });

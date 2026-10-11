@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { Supermemory } from "supermemory";
-import { createMemory, memoryNamespace, tripMemoryNamespace } from "./memory.ts";
+import { createMemory, memoryNamespace, profileMemoryNamespace, tripMemoryNamespace } from "./memory.ts";
+import { createClient } from "@supabase/supabase-js";
+import { createMemoryWorker } from "./memory-worker.ts";
 
 function api(response: (path: string) => { status?: number; body: unknown }) {
   const calls: { path: string; body: Record<string, unknown>; method?: string }[] = [];
@@ -30,6 +32,34 @@ test("namespaces are stable, hide raw IDs, and separate users, projects and plat
   assert.throws(() => memoryNamespace("project", "imessage", " "), /Missing memory identity/);
 });
 
+test("validated profile memory cannot recall legacy assistant suggestions or trip memories", () => {
+  const namespace = memoryNamespace("project", "imessage", "user");
+  assert.notEqual(profileMemoryNamespace(namespace), namespace);
+  assert.notEqual(profileMemoryNamespace(namespace), tripMemoryNamespace(namespace, "00000000-0000-4000-8000-000000000001"));
+  assert.equal(profileMemoryNamespace(namespace), profileMemoryNamespace(namespace));
+  assert.throws(() => profileMemoryNamespace("../another_user"));
+});
+
+test("memory worker indexes the current complete profile with a stable ID rather than an old patch", async () => {
+  const owner = "00000000-0000-4000-8000-000000000001", namespace = memoryNamespace("project", "imessage", "user");
+  const added: unknown[][] = [];
+  const client = createClient("https://example.supabase.co", "unit-key", { global: { fetch: async (input) => {
+    const path = new URL(String(input)).pathname;
+    const value = path.endsWith("wing_claim_memory") ? [{ id: "document", owner_id: owner, source_message_id: "source", document_id: "old_patch", content: JSON.stringify({ currentTravelFacts: { homeAirport: "EWR" }, tripId: null, version: 2 }) }]
+      : path.endsWith("wing_users") ? { identity_key: namespace }
+      : path.endsWith("wing_profiles") ? { facts: { homeAirport: { confirmed: { value: "DFW" } }, budgetCents: { confirmed: { value: null } }, budgetMode: { confirmed: { value: "cheapest" } } }, version: 8 }
+      : [];
+    return new Response(JSON.stringify(value));
+  } } });
+  await createMemoryWorker(client, { add: async (...args) => { added.push(args); return {}; } })(owner);
+  assert.equal(added.length, 1);
+  assert.equal(added[0]![0], profileMemoryNamespace(namespace));
+  const request = added[0]![1] as { id: string; content: string };
+  assert.equal(request.id, `profile_${owner}`);
+  assert.deepEqual(JSON.parse(request.content), { currentTravelFacts: { homeAirport: "DFW", budgetCents: null, budgetMode: "cheapest" }, tripId: null, version: 8 });
+  assert.doesNotMatch(request.content, /EWR/);
+});
+
 test("trip namespaces satisfy the live API's length limit and isolate both owner and trip", () => {
   const owner = memoryNamespace("project", "imessage", "user");
   const trip = "00000000-0000-4000-8000-000000000001";
@@ -48,7 +78,7 @@ test("the SDK calls v5 profile and hybrid search in exactly one namespace", asyn
       { isLatest: false, memory: "Outdated budget $500" }] } }));
   const namespace = memoryNamespace("project", "imessage", "user");
   const context = await memory.recall(namespace, "where should I fly?");
-  assert.deepEqual(calls.map((call) => call.path).sort(), [`/ns/${namespace}/profile`, `/ns/${namespace}/search`].sort());
+  assert.deepEqual(calls.map((call) => call.path).sort(), [`/ns/${profileMemoryNamespace(namespace)}/profile`, `/ns/${profileMemoryNamespace(namespace)}/search`].sort());
   assert.ok(calls.every((call) => call.method === "POST"));
   assert.equal(calls.find((call) => call.path.endsWith("search"))?.body.query, "where should I fly?");
   assert.equal(calls.find((call) => call.path.endsWith("search"))?.body.searchMode, "hybrid");

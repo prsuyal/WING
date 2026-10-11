@@ -1,0 +1,104 @@
+{
+  "phase": 2,
+  "status": "complete",
+  "checkedAt": "2026-10-11T05:26:25.656Z",
+  "passed": [
+    "oauth_state_pkce_cookie_origin_expiry_replay_and_encrypted_owner_binding",
+    "paginated_calendar_reads_and_revoked_credentials_become_unknown",
+    "approved_exact_review_calendar_write_readback_and_duplicate_owner_checks",
+    "uncertain_write_reconciliation_readonly_and_stale_selection_rejection",
+    "real_claude_text_intake_and_vision_with_separate_preview_confirmation",
+    "restart_schedule_ownership_stale_confirmation_and_schedule_memory_exclusion"
+  ],
+  "integration": {
+    "supabase": "real hosted database",
+    "claudeTextAndVision": "real API",
+    "google": "live OAuth, discovery, selection, fresh reads, approved test event creation and independent exact readback verified; controlled fixtures cover failures and deduplication",
+    "photon": "real screenshot delivery, context-aware preview and separate confirmation verified"
+  },
+  "pending": [],
+  "scopeChanges": [
+    "iCloud deferred by user",
+    "iMessage interface; browser only for Google consent",
+    "README remains empty; JSON verification checkpoints"
+  ],
+  "automatedTests": {
+    "passed": 55,
+    "failed": 0,
+    "typeCheck": "passed"
+  },
+  "deployment": {
+    "id": "1fa9778a-b743-435f-a448-1b5a9112a177",
+    "status": "SUCCESS",
+    "publicBaseUrl": "https://wing-production-35b4.up.railway.app"
+  },
+  "browserRegression": {
+    "issue": "no-referrer nullified browser form Origin and caused browser_origin rejection",
+    "fix": "same-origin policy on consent page; no-referrer on cross-site Google redirect",
+    "nativeBrowserForm": "same-origin Origin header observed and link claim accepted using synthetic fixture",
+    "deployedLanding": {
+      "status": 200,
+      "form": true,
+      "referrerPolicy": "same-origin"
+    },
+    "checkedAt": "2026-10-10T23:48:04.911Z",
+    "redirect": {
+      "issue": "CSP form-action self blocked the Google redirect after claiming the one-use link",
+      "fix": "allow only self and https://accounts.google.com as form destinations",
+      "nativeBrowser": "reproduced staying on wing with previous policy; corrected policy navigated to Google's expected invalid_client page using synthetic credentials",
+      "checkedAt": "2026-10-10T23:51:45.092Z",
+      "deployedPolicyVerified": true
+    }
+  },
+  "liveGoogle": {
+    "connected": true,
+    "selectedCalendarCount": 1,
+    "ownedCalendarSelected": true,
+    "freshReadSucceeded": true,
+    "unknown": false,
+    "normalizedCommitments": 47,
+    "timeZone": "America/New_York",
+    "refreshedAt": "2026-10-10T23:54:54.452Z",
+    "approvedDemoEvent": {
+      "status": "confirmed",
+      "explicitIMessageApprovalRecorded": true,
+      "independentGoogleReadback": true,
+      "approvedTimesMatch": true,
+      "durationMinutes": 10,
+      "nonblocking": true,
+      "noDefaultReminders": true,
+      "noAttendees": true,
+      "checkedAt": "2026-10-10T23:56:14.951Z"
+    }
+  },
+  "databaseSecurity": {
+    "checkedAt": "2026-10-10T23:55:46.440Z",
+    "unexpectedBrowserGrants": 0,
+    "advisors": "INFO only: RLS enabled without client policies is intentional for backend-only tables",
+    "remediationReference": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy"
+  },
+  "screenshotRegression": {
+    "actualUserImage": "read-only real Claude vision check",
+    "calendarContext": "real owner-selected Google calendar",
+    "privateScheduleRecordsChanged": false,
+    "weekDatesMatched": true,
+    "interviewTimeResolved": true,
+    "twoDayBreakPreserved": true,
+    "staleReadabilityNotesRemoved": true,
+    "reusesPendingCandidate": true,
+    "emptyCellsNeverDeclaredFree": true,
+    "preview": "friendly day groups with one confirmation",
+    "checkedAt": "2026-10-11T00:06:16.594Z"
+  },
+  "liveScreenshot": {
+    "status": "confirmed",
+    "version": 4,
+    "dates": [
+      "2026-10-11",
+      "2026-10-17"
+    ],
+    "timeZone": "America/New_York",
+    "commitments": 13,
+    "explicitIMessageConfirmationRecorded": true
+  }
+}

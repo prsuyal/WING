@@ -1,0 +1,90 @@
+{
+  "phase": 3,
+  "status": "complete",
+  "checkedAt": "2026-10-11T01:34:42.593Z",
+  "passed": [
+    "fresh_schedule_filtering_persisted_owner_provenance_and_idempotent_search",
+    "forged_owner_stale_version_expiry_explicit_flex_and_whole_trip_budget_guards",
+    "real_claude_monday_return_conditional_layovers_nearby_airports_and_same_itinerary_history",
+    "restart_persistence_failed_calendar_and_separate_trip_context",
+    "class_permission_never_reclassifies_unconfirmed_occurrences_with_matching_titles"
+  ],
+  "simulated": [
+    "flights",
+    "prices",
+    "price history",
+    "travel buffers"
+  ],
+  "pending": [],
+  "testDates": {
+    "departure": "2026-10-28",
+    "sunday": "2026-11-01",
+    "monday": "2026-11-02"
+  },
+  "automatedTests": {
+    "passed": 68,
+    "failed": 0,
+    "typeCheck": "passed"
+  },
+  "integration": {
+    "supabase": "real hosted database",
+    "claude": "real API with captured iMessage transport",
+    "calendarFixtures": "controlled failures, class permission and schedule conflicts",
+    "photon": "User verified live search, Monday-return update and JFK alternative in iMessage"
+  },
+  "liveCalendar": {
+    "checkedAt": "2026-10-11T00:31:44.303Z",
+    "freshGoogleRead": true,
+    "calendarCommitments": 9,
+    "privateTripRecordsChanged": false,
+    "externalCalendarEventsChanged": false,
+    "simulatedSearch": true,
+    "status": "no_results",
+    "optionCount": 0,
+    "cheapestRejectedForSchedule": true,
+    "privateTitlesLogged": false,
+    "weekendCheck": {
+      "dates": {
+        "outbound": "2026-10-30",
+        "return": "2026-11-01"
+      },
+      "freshGoogleRead": true,
+      "calendarCommitments": 3,
+      "status": "options",
+      "optionCount": 3,
+      "privateTitlesLogged": false,
+      "externalCalendarEventsChanged": false
+    }
+  },
+  "databaseSecurity": {
+    "rlsEnabled": true,
+    "unexpectedBrowserGrants": 0,
+    "advisors": "INFO only; backend-only tables intentionally have no browser policies"
+  },
+  "regressions": [
+    "Compare layover savings using local departure dates, including UTC midnight and DST",
+    "Replay the persisted search payload exactly",
+    "Class permission binds matching confirmed occurrences, not merely event titles"
+  ],
+  "deployment": {
+    "id": "e243fc64-6b21-4870-9396-e10a293e29de",
+    "status": "SUCCESS",
+    "healthStatus": 200,
+    "checkedAt": "2026-10-11T00:41:50.110Z",
+    "publicBaseUrl": "https://wing-production-35b4.up.railway.app"
+  },
+  "livePhone": {
+    "checkedAt": "2026-10-11T00:40:33.393Z",
+    "initialRoundTrip": true,
+    "mondayReturn": true,
+    "nearbyJfkAlternative": true,
+    "scheduleConflictExplanation": true,
+    "userRequestedConciseReplies": true
+  },
+  "presentation": {
+    "compactTimes": true,
+    "midnightAndDstTested": true,
+    "priceHistoryOnRequest": true,
+    "totalsBaggageAndSimulationPreserved": true
+  }
+}

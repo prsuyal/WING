@@ -1,0 +1,87 @@
+{
+  "phase": 4,
+  "status": "complete",
+  "checkedAt": "2026-10-11T05:55:01.846Z",
+  "passed": [
+    "exact_delivered_review_separate_approval_owner_calendar_concurrency_and_duplicate_guards",
+    "failed_or_unknown_offer_delivery_cannot_be_selected",
+    "ya_and_yup_approve_exact_review_and_recover_intervening_error_without_stale_or_duplicate_approval",
+    "declined_review_cannot_be_approved_or_create_a_reservation",
+    "expired_review_and_changed_offer_total_or_version_require_reapproval",
+    "provider_failure_lost_response_reconciliation_and_safe_retry_without_duplicates",
+    "changes_between_approval_and_commit_reject_stale_terms_and_allow_a_fresh_review",
+    "outbound_departure_passing_before_commit_cannot_create_a_reservation",
+    "real_claude_short_recommendation_baggage_question_thanks_and_restart_selection_without_repeating_search",
+    "real_claude_selection_exact_review_iMessage_approval_and_restart_replay"
+  ],
+  "simulated": [
+    "flights",
+    "saved payment",
+    "booking",
+    "confirmation"
+  ],
+  "pending": [],
+  "providerCommits": "atomic simulated reservation + action + booked trip; uncertain responses reconciled by action ID",
+  "privateTestUsersRemoved": true,
+  "automatedTests": {
+    "passed": 75,
+    "failed": 0,
+    "typeCheck": "passed"
+  },
+  "integration": {
+    "supabase": "real hosted database",
+    "claude": "real API with captured iMessage transport",
+    "photon": "live selection, approval and repeated approval confirmed by user",
+    "calendar": "real integration retained; controlled fixtures verify revoked/read failure guards",
+    "phase3Regression": "five end-to-end groups passed after shared calendar extraction"
+  },
+  "databaseSecurity": {
+    "bookingTablesWithRls": 3,
+    "unexpectedBrowserGrants": 0,
+    "unexpectedBrowserFunctionGrants": 0,
+    "advisors": "INFO only; backend-only tables intentionally have no browser policies"
+  },
+  "scope": {
+    "payment": "fictional saved Demo Visa label, no real card collection",
+    "provider": "atomic persisted simulation, not a live airline or payment provider",
+    "calendarWrites": "itinerary writes deferred to Phase 5"
+  },
+  "deployment": {
+    "id": "dfbd5bd4-7476-4d9a-90d3-71a5d27c3016",
+    "status": "SUCCESS",
+    "healthStatus": 200,
+    "checkedAt": "2026-10-11T01:43:00.655Z",
+    "publicBaseUrl": "https://wing-production-35b4.up.railway.app",
+    "iMessageListenerStarted": true
+  },
+  "livePhone": {
+    "selectionApprovalAndRepeat": "confirmed by user",
+    "confirmedAt": "2026-10-11T01:12:03.491663+00:00"
+  },
+  "conversation": {
+    "checkedAt": "2026-10-11T01:40:09.410840+00:00",
+    "defaultReply": "1–3 words for simple acknowledgments and yes/no questions; otherwise usually 3–12 words",
+    "firstRecommendation": "one displayed choice by default, under 45 words in tests",
+    "followups": "changed legs and price only; no automatic baggage or rejected-fare recap",
+    "alternatives": "requested options only; nearby airport comparison avoids duplicate flight times",
+    "verified": "real Claude and Supabase, captured iMessage transport; questions before and after booking, restart selection, owner isolation and uncertain delivery",
+    "newPhoneWording": "not yet independently verified",
+    "regressionGroups": 15,
+    "binaryFlightQuestions": "one-word answers verified against owner-bound offer or saved reservation; qualified/compound questions use normal explanation",
+    "approvalReplies": [
+      "yes",
+      "ya",
+      "yup",
+      "yeah",
+      "yep",
+      "sure",
+      "ok",
+      "go ahead",
+      "sounds good",
+      "looks good",
+      "thumbs up"
+    ],
+    "approvalRecovery": "intervening failure re-presents exact review; a fresh separate approval is still required",
+    "punctuation": "no sentence-ending full stops in routine replies; exact persisted reviews stay verbatim"
+  }
+}

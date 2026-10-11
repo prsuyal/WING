@@ -19,7 +19,7 @@ export function plannedRide(offer: Offer, pickup: string, assumptions: unknown, 
   return rideSchema.parse({ pickup, airport: first.departureAirport, airportAt: airportAt.toString(), pickupAt: airportAt.subtract({ minutes: buffers.originDriveMinutes }).toString(), timeZone: first.departureTimeZone, driveMinutes: buffers.originDriveMinutes, airportBufferMinutes: buffers.airportBufferMinutes, totalCents: 3200, rideType: "standard", simulated: true, paymentLabel, paymentVersion, pickupSource });
 }
 export function rideReview(_id: string, ride: Ride) {
-  return `reserve a standard airport ride for $${(ride.totalCents / 100).toFixed(2)}?\n${stamp(ride.pickupAt, ride.timeZone)}\n${ride.pickup} → ${ride.airport}\n${ride.driveMinutes} min drive + ${ride.airportBufferMinutes} min airport buffer (estimates)\n\nthis is simulated, no real ride, dispatch or charge\nreply yes to reserve, or no`;
+  return `reserve a simulated uber to the airport for $${(ride.totalCents / 100).toFixed(2)}?\n${stamp(ride.pickupAt, ride.timeZone)}\n${ride.pickup} → ${ride.airport}\n${ride.driveMinutes} min drive + ${ride.airportBufferMinutes} min airport buffer (estimates)\n\nthis is simulated, no real ride, dispatch or charge\nreply yes to reserve, or no`;
 }
 export const itineraryEventSchema = z.object({ id: z.string().regex(/^[a-v0-9]{5,1024}$/), summary: z.string().regex(/^\[(?:DEMO|simulated)\]/), description: z.string(), location: z.string(), visibility: z.literal("private"), transparency: z.literal("transparent"), start: z.object({ dateTime: z.iso.datetime({ offset: true }), timeZone: z.string() }), end: z.object({ dateTime: z.iso.datetime({ offset: true }), timeZone: z.string() }), reminders: z.object({ useDefault: z.literal(false), overrides: z.array(z.object({ method: z.literal("popup"), minutes: z.number().int().min(0).max(1440) }).strict()).max(1).optional() }).strict(), extendedProperties: z.object({ private: z.object({ wingTrip: z.uuid(), wingItem: z.string(), wingSimulation: z.literal("true") }) }) }).strict();
 export type ItineraryEvent = z.infer<typeof itineraryEventSchema>;
@@ -50,6 +50,18 @@ export function createDemoRideProvider(client: SupabaseClient, waitMs = 800) {
     if (error || data !== true) throw new Error("Demo ride outcome unavailable");
   } };
 }
+export async function resolveRidePickup(client: SupabaseClient, owner: string, tripId: string) {
+  const { data: trip, error } = await client.from("wing_trips").select("pickup_override").eq("owner_id", owner).eq("id", tripId).single();
+  if (error) throw new Error("Pickup unavailable");
+  if (trip.pickup_override) return { address: String(trip.pickup_override.address), source: `override:${trip.pickup_override.sourceMessageId}` };
+  for (const kind of ["campus", "home"] as const) {
+    const { data: addresses, error: addressError } = await client.from("wing_addresses").select("id,address").eq("owner_id", owner).eq("kind", kind).eq("confirmed", true).order("updated_at", { ascending: false }).limit(1);
+    if (addressError) throw new Error("Saved pickup unavailable");
+    if (addresses?.[0]) return { address: addresses[0].address as string, source: `address:${addresses[0].id}` };
+  }
+  return null;
+}
+
 export function createJourneys(client: SupabaseClient, profiles: ProfileStore, calendar: Calendar, provider = createDemoRideProvider(client)) {
   async function rows(owner: string) {
     const { data, error } = await client.from("wing_journey_actions").select("*").eq("owner_id", owner).order("created_at", { ascending: false }).limit(100);
@@ -71,14 +83,7 @@ export function createJourneys(client: SupabaseClient, profiles: ProfileStore, c
     if (actionError || action?.status !== "confirmed" || JSON.stringify(offerSchema.parse(action.offer)) !== JSON.stringify(offer)) throw new Error("Booking not verified");
     return { trip, offer, flightId: data.action_id as string, assumptions: assumptionsSchema.parse(action.assumptions) };
   }
-  async function pickup(owner: string, tripId: string) {
-    const { data: trip, error } = await client.from("wing_trips").select("pickup_override").eq("owner_id", owner).eq("id", tripId).single();
-    if (error) throw new Error("Pickup unavailable");
-    if (trip.pickup_override) return { address: String(trip.pickup_override.address), source: `override:${trip.pickup_override.sourceMessageId}` };
-    const { data: addresses, error: addressError } = await client.from("wing_addresses").select("id,address").eq("owner_id", owner).eq("kind", "campus").eq("confirmed", true).order("updated_at", { ascending: false }).limit(1);
-    if (addressError) throw new Error("Saved pickup unavailable");
-    return addresses?.[0] ? { address: addresses[0].address as string, source: `address:${addresses[0].id}` } : null;
-  }
+  const pickup = (owner: string, tripId: string) => resolveRidePickup(client, owner, tripId);
   async function store(actor: Actor, booked: Awaited<ReturnType<typeof booking>>, kind: Action["kind"], payload: unknown, review: string, id: string) {
     const { data, error } = await client.rpc("wing_review_journey", { p_owner: actor.userId, p_source: actor.sourceMessageId, p_trip: booked.trip.id, p_flight: booked.flightId, p_kind: kind, p_payload: payload, p_hash: hash(payload), p_review: review, p_id: id, p_version: booked.trip.version });
     if (error) { console.error(JSON.stringify({ event: "journey_review_rejected", code: error.code, reason: ["Trip unavailable or changed", "Invalid source", "Invalid journey terms"].find((reason) => error.message.startsWith(reason)) ?? "unavailable" })); throw new Error("Journey changed; check it before retrying"); }

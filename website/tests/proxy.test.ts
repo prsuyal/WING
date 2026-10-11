@@ -71,3 +71,15 @@ test("missing links stay unavailable and transient backend failures expose no in
   assert.equal(response.status, 503);
   assert.equal((await response.text()).includes("secret"), false);
 });
+
+
+test("website proxy accepts a booked itinerary but rejects private nested ride data", async (t) => {
+  const leg = { flightNumber: "UA 123", departureAirport: "RDU", arrivalAirport: "EWR", departureName: "Raleigh-Durham", arrivalName: "Newark Liberty", departureCity: "Raleigh", arrivalCity: "Newark", departsAt: "2026-11-06T18:00:00Z", arrivesAt: "2026-11-06T19:40:00Z", departureTimeZone: "America/New_York", arrivalTimeZone: "America/New_York" };
+  const booked = { ...summary, status: "booked", booking: { airline: "United", cabin: "economy", baggage: "carry-on included", outbound: [leg], inbound: [{ ...leg, departureAirport: "EWR", arrivalAirport: "RDU", departsAt: "2026-11-09T18:00:00Z", arrivesAt: "2026-11-09T19:40:00Z" }], simulated: true }, ride: { provider: "Uber", status: "reserved", pickupLabel: "Trip pickup", airport: "RDU", pickupAt: "2026-11-06T15:25:00Z", airportAt: "2026-11-06T16:00:00Z", timeZone: "America/New_York", simulated: true } };
+  const mock = t.mock.method(globalThis, "fetch", async () => Response.json(booked));
+  assert.deepEqual(await (await read()).json(), booked);
+  mock.mock.mockImplementation(async () => Response.json({ ...booked, ride: { ...booked.ride, pickup: "123 Secret Lane" } }));
+  assert.equal((await read()).status, 503);
+  mock.mock.mockImplementation(async () => Response.json({ ...booked, booking: undefined }));
+  assert.equal((await read()).status, 503);
+});

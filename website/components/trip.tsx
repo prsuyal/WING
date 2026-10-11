@@ -5,14 +5,13 @@ import Link from "next/link";
 import { Cloud, CloudBank, Icon, Plane, TravelDrawing } from "./artwork";
 import { Footer } from "./brand";
 import { Navigation } from "./navigation";
+import type { PublicFlight } from "@/lib/public-summary";
 import { summarySchema, type PlanningSummary } from "@/lib/summary";
 
 function TripShell({
   children,
-  sample = false,
 }: {
   children: React.ReactNode;
-  sample?: boolean;
 }) {
   return (
     <>
@@ -22,7 +21,7 @@ function TripShell({
         <CloudBank />
         <TravelDrawing kind="home" />
       </main>
-      <Footer privateTrip={!sample} />
+      <Footer />
     </>
   );
 }
@@ -63,63 +62,18 @@ function BoardingRoute({ departure, arrival, planning = false, returning = false
   );
 }
 
-function FlightBoardingPass({ returning = false }: { returning?: boolean }) {
-  const titleId = returning ? "return-title" : "outbound-title";
-  return (
-    <section className="boarding-ticket" aria-labelledby={titleId}>
-      <div className="boarding-ticket-body">
-        <div className="boarding-ticket-heading"><h2 id={titleId}>{returning ? "Return flight" : "Outbound flight"}</h2><span>{returning ? "Mon, Nov 9" : "Fri, Nov 6"}</span></div>
-        <BoardingRoute departure={returning ? "EWR" : "RDU"} arrival={returning ? "RDU" : "EWR"} returning={returning} />
-        <p className="boarding-timezone">All flight times in Eastern Time</p>
-      </div>
-      <div className="boarding-ticket-stub">
-        <dl className="boarding-ticket-fields">
-          <div><dt>Flight</dt><dd>{returning ? "102" : "101"}</dd></div>
-          <div><dt>Traveler</dt><dd>Aarnav</dd></div>
-        </dl>
-        <span className="boarding-stamp" aria-hidden="true">{returning ? "Back to campus" : "Heading home"}</span>
-      </div>
-    </section>
-  );
-}
+const sampleSummary: PlanningSummary = {
+  displayName: "Aarnav", status: "booked", departureAirport: "RDU", arrivalAirport: "EWR",
+  outboundDate: "2026-11-06", returnDate: "2026-11-09", updatedAt: "2026-11-06T20:15:00Z", simulated: true,
+  booking: { airline: "Sample airline", cabin: "economy", baggage: "Carry-on", simulated: true,
+    outbound: [{ flightNumber: "101", departureAirport: "RDU", arrivalAirport: "EWR", departureName: "Raleigh-Durham", arrivalName: "Newark Liberty", departureCity: "Raleigh", arrivalCity: "Newark", departsAt: "2026-11-06T22:10:00Z", arrivesAt: "2026-11-06T23:45:00Z", departureTimeZone: "America/New_York", arrivalTimeZone: "America/New_York" }],
+    inbound: [{ flightNumber: "102", departureAirport: "EWR", arrivalAirport: "RDU", departureName: "Newark Liberty", arrivalName: "Raleigh-Durham", departureCity: "Newark", arrivalCity: "Raleigh", departsAt: "2026-11-09T15:00:00Z", arrivesAt: "2026-11-09T16:35:00Z", departureTimeZone: "America/New_York", arrivalTimeZone: "America/New_York" }],
+  },
+  ride: { provider: "Uber", status: "reserved", pickupLabel: "Campus pickup", airport: "RDU", pickupAt: "2026-11-06T19:00:00Z", airportAt: "2026-11-06T19:35:00Z", timeZone: "America/New_York", simulated: true },
+};
 
 export function SampleTrip() {
-  return (
-    <TripShell sample>
-      <div className="trip-container boarding-view">
-        <BoardingHeader title="Aarnav's trip home." subtitle="Raleigh to Newark · November 6–9, 2026">
-          <section className="boarding-header-timeline" aria-labelledby="afternoon-title">
-            <h2 id="afternoon-title">Aarnav’s journey</h2>
-            <ol className="boarding-timeline horizontal">
-              <li><time>2:00 PM</time><h3>Ride to RDU</h3><p>Campus pickup · Reserved</p></li>
-              <li className="current"><time>5:10 PM</time><h3>Take off</h3><p>Updated departure · Flight 101</p></li>
-              <li><time>6:45 PM</time><h3>Land at Newark</h3><p>Estimated arrival</p></li>
-            </ol>
-          </section>
-        </BoardingHeader>
-        <div className="boarding-layout">
-          <div className="boarding-flight-column">
-            <div className="boarding-notice delayed">
-              <Icon name="clock" />
-              <div><h2>Flight delayed by 40 minutes.</h2><p>Now departing at 5:10 PM ET.</p></div>
-            </div>
-            <FlightBoardingPass />
-          </div>
-          <div className="boarding-secondary-column">
-          <section className="boarding-ride" aria-labelledby="ride-title">
-            <div className="boarding-ride-heading"><Icon name="car" /><h2 id="ride-title">Airport ride</h2><span>Reserved</span></div>
-            <p>Campus → RDU</p><p className="boarding-secondary">Pickup stays at 2:00 PM ET.<br />Your ride time hasn’t changed.</p>
-          </section>
-
-          <div className="boarding-return compact">
-            <FlightBoardingPass returning />
-          </div>
-          </div>
-        </div>
-        <p className="boarding-updated">Updated Nov 6, 2026 at 3:15 PM ET</p>
-      </div>
-    </TripShell>
-  );
+  return <TripShell><BookedTrip summary={sampleSummary} sample /></TripShell>;
 }
 
 function dateLabel(value: string | null) {
@@ -166,6 +120,95 @@ function PlanningTrip({ summary }: { summary: PlanningSummary }) {
       <p className="boarding-updated">Last updated: {new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" }).format(new Date(summary.updatedAt))} UTC</p>
     </div>
   );
+}
+
+function localTime(instant: string, zone: string) {
+  return new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit", timeZoneName: "short", timeZone: zone }).format(new Date(instant));
+}
+function localDay(instant: string, zone: string) {
+  return new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric", timeZone: zone }).format(new Date(instant));
+}
+function clockTime(instant: string, zone: string) {
+  return new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit", timeZone: zone }).format(new Date(instant));
+}
+function flightDay(instant: string, zone: string) {
+  return new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: zone }).format(new Date(instant));
+}
+function shortAirport(name: string) {
+  return name.replace(/\s+(?:International\s+)?Airport$/i, "");
+}
+function tripDates(start: string | null, end: string | null) {
+  if (!start || !end) return `${dateLabel(start)} – ${dateLabel(end)}`;
+  if (start.slice(0, 7) === end.slice(0, 7)) {
+    const month = new Intl.DateTimeFormat("en-US", { month: "long", timeZone: "UTC" }).format(new Date(`${start}T12:00:00Z`));
+    return `${month} ${Number(start.slice(8))}–${Number(end.slice(8))}, ${end.slice(0, 4)}`;
+  }
+  return `${dateLabel(start)} – ${dateLabel(end)}`;
+}
+function BookedFlightPass({ legs, name, traveler, baggage, sample = false, returning = false }: { legs: PublicFlight[]; name: string; traveler: string; baggage: string; sample?: boolean; returning?: boolean }) {
+  return <section className="boarding-ticket" aria-label={name}>
+    <div className="boarding-ticket-body">
+      <div className="boarding-ticket-heading"><h2>{name}</h2><span>{flightDay(legs[0].departsAt, legs[0].departureTimeZone)}</span></div>
+      {legs.map((leg, index) => {
+        const arrivesNextDay = flightDay(leg.departsAt, leg.departureTimeZone) !== flightDay(leg.arrivesAt, leg.arrivalTimeZone);
+        const depZone = localTime(leg.departsAt, leg.departureTimeZone).replace(clockTime(leg.departsAt, leg.departureTimeZone), "").trim();
+        const arrZone = localTime(leg.arrivesAt, leg.arrivalTimeZone).replace(clockTime(leg.arrivesAt, leg.arrivalTimeZone), "").trim();
+        return <div key={`${leg.flightNumber}-${leg.departsAt}`}>
+          {index > 0 && <p className="boarding-secondary">Connection in {leg.departureCity} · {leg.flightNumber}</p>}
+          <div className="boarding-route">
+            <div className="boarding-route-codes"><strong className="boarding-route-code">{leg.departureAirport}</strong><div className="boarding-route-trail" aria-hidden="true"><span /><Plane /><span /></div><strong className="boarding-route-code">{leg.arrivalAirport}</strong></div>
+            <div className="boarding-route-details">
+              <div className="boarding-airport"><span>{shortAirport(leg.departureName)}</span><time dateTime={leg.departsAt}>{clockTime(leg.departsAt, leg.departureTimeZone)}</time>{sample && !returning && <s aria-label="Originally 4:30 PM">4:30 PM</s>}</div>
+              <div className="boarding-airport destination"><span>{shortAirport(leg.arrivalName)}</span><time dateTime={leg.arrivesAt}>{clockTime(leg.arrivesAt, leg.arrivalTimeZone)}</time>{sample && !returning && <s aria-label="Originally 6:05 PM">6:05 PM</s>}</div>
+            </div>
+          </div>
+          <p className="boarding-timezone">{arrivesNextDay ? `Arrives ${flightDay(leg.arrivesAt, leg.arrivalTimeZone)} · ` : ""}{depZone === arrZone ? `All flight times in ${depZone}` : `${depZone} departure · ${arrZone} arrival`}</p>
+        </div>;
+      })}
+      <p className="boarding-secondary boarding-baggage">{baggage}</p>
+    </div>
+    <div className="boarding-ticket-stub"><dl className="boarding-ticket-fields"><div><dt>Flight</dt><dd>{legs.map(leg => leg.flightNumber).join(" / ")}</dd></div><div><dt>Traveler</dt><dd>{traveler === "Your traveler" ? "Traveler" : traveler}</dd></div></dl><span className="boarding-stamp" aria-hidden="true">{sample ? returning ? "Back to campus" : "Heading home" : returning ? "Returning" : "Outbound"}</span></div>
+  </section>;
+}
+export function BookedTrip({ summary, sample = false }: { summary: PlanningSummary; sample?: boolean }) {
+  const booking = summary.booking!;
+  const first = booking.outbound[0], last = booking.outbound.at(-1)!;
+  const traveler = summary.displayName === "Your traveler" ? "Your traveler" : summary.displayName;
+  const title = traveler === "Your traveler" ? `Trip to ${last.arrivalCity}.` : `${traveler}’s trip${sample ? " home" : ""}.`;
+  return <div className="trip-container boarding-view">
+    <BoardingHeader title={title} subtitle={`${first.departureCity} to ${last.arrivalCity} · ${tripDates(summary.outboundDate, summary.returnDate)}`}>
+      <section className="boarding-header-timeline" aria-label="Journey schedule"><h2>{traveler === "Your traveler" ? "The journey" : `${traveler}’s journey`}</h2><ol className="boarding-timeline horizontal">
+        {summary.ride && <li><time dateTime={summary.ride.pickupAt}>{clockTime(summary.ride.pickupAt, summary.ride.timeZone)}</time><h3>Ride to {summary.ride.airport}</h3><p>{summary.ride.pickupLabel} · Reserved</p></li>}
+        <li className={sample ? "current" : undefined}><time dateTime={first.departsAt}>{clockTime(first.departsAt, first.departureTimeZone)}</time><h3>Take off</h3><p>{sample ? "Updated departure" : "Scheduled"} · Flight {first.flightNumber}</p></li>
+        <li><time dateTime={last.arrivesAt}>{clockTime(last.arrivesAt, last.arrivalTimeZone)}</time><h3>Land at {last.arrivalCity}</h3><p>{sample ? "Estimated arrival" : "Scheduled arrival"}</p></li>
+      </ol></section>
+    </BoardingHeader>
+    <div className="boarding-layout">
+      <div className="boarding-flight-column">
+        <div className={`boarding-notice${sample ? " delayed" : ""}`}><Icon name={sample ? "clock" : "plane"} /><div><h2>{sample ? "Flight delayed by 40 minutes." : "Your trip itinerary"}</h2><p>{sample ? "Now departing at 5:10 PM ET." : "Simulated flight and Uber reservations."}</p></div></div>
+        <BookedFlightPass legs={booking.outbound} name="Outbound flight" traveler={traveler} baggage={booking.baggage} sample={sample} />
+      </div>
+      <div className="boarding-secondary-column">
+        <section className="boarding-ride" aria-labelledby="shared-ride-title"><div className="boarding-ride-heading"><Icon name="car" /><h2 id="shared-ride-title">Airport ride</h2><span>{summary.ride ? "Reserved" : "Not arranged"}</span></div>
+          {summary.ride ? <><p>{summary.ride.pickupLabel.replace(" pickup", "")} → {summary.ride.airport}</p><p className="boarding-secondary">{sample ? <>Pickup stays at 2:00 PM ET.<br />Your ride time hasn’t changed.</> : <>Uber pickup at {localTime(summary.ride.pickupAt, summary.ride.timeZone)}.<br />At the airport by {localTime(summary.ride.airportAt, summary.ride.timeZone)}.</>}</p></> : <p className="boarding-secondary">No airport ride reserved yet.</p>}
+        </section>
+        <div className="boarding-return compact"><BookedFlightPass legs={booking.inbound} name="Return flight" traveler={traveler} baggage={booking.baggage} sample={sample} returning /></div>
+      </div>
+    </div>
+    <p className="boarding-updated">Updated {localDay(summary.updatedAt, first.departureTimeZone)} at {localTime(summary.updatedAt, first.departureTimeZone)}</p>
+  </div>;
+}
+function ShareTripButton() {
+  const [message, setMessage] = useState("");
+  async function share() {
+    if (["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname)) { setMessage("This is a local preview. A hosted website link is needed to share with family."); return; }
+    const url = window.location.href;
+    try {
+      if (navigator.share) await navigator.share({ title: "Wing trip", url });
+      else { await navigator.clipboard.writeText(url); setMessage("Link copied. Anyone with it can view this trip until it expires or is revoked."); }
+    } catch (error) { if (!(error instanceof DOMException && error.name === "AbortError")) setMessage("Copy this page’s address to share the trip."); }
+  }
+  return <div className="trip-container trip-share"><button className="button primary" onClick={share}>Share trip link <Icon name="arrow" /></button>{message && <p className="boarding-secondary" role="status">{message}</p>}</div>;
 }
 
 export function SharedTrip({ token }: { token: string }) {
@@ -252,7 +295,7 @@ export function SharedTrip({ token }: { token: string }) {
           <button onClick={() => setRetry((n) => n + 1)}>Retry now</button>
         </div>
       )}
-      {summary && <PlanningTrip summary={summary} />}{" "}
+      {summary && <>{summary.booking ? <BookedTrip summary={summary} /> : <PlanningTrip summary={summary} />}<ShareTripButton /></>}{" "}
       {!summary && (
         <div className="trip-state">
           <Cloud className="state-cloud" />

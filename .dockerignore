@@ -5,3 +5,7 @@ assets
 verification
 README.md
 *.log
+
+**/node_modules
+**/.next
+**/.env*

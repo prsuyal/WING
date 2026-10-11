@@ -5,6 +5,7 @@ RUN npm ci
 COPY tsconfig.json ./
 COPY src ./src
 COPY data ./data
+COPY website/lib/public-summary.ts ./website/lib/public-summary.ts
 RUN npm run check
 USER node
 ENV NODE_ENV=production

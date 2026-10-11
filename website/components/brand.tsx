@@ -11,7 +11,7 @@ export function Brand() {
   );
 }
 
-export function Footer({ privateTrip = false }: { privateTrip?: boolean }) {
+export function Footer() {
   return (
     <footer className="footer">
       <div className="footer-inner">
@@ -21,20 +21,7 @@ export function Footer({ privateTrip = false }: { privateTrip?: boolean }) {
           <Link href="/#faq">FAQ</Link>
           <SetupTrigger className="footer-setup">Set up Wing</SetupTrigger>
         </nav>
-        <p className={privateTrip ? undefined : "footer-tagline"}>
-          {privateTrip ? (
-            <>
-              Read-only trip link.
-              <br />
-              Anyone with this active link can view these trip details.
-            </>
-          ) : (
-            <>
-              Home is a text away.
-
-            </>
-          )}
-        </p>
+        <p className="footer-tagline">Home is a text away.</p>
       </div>
     </footer>
   );

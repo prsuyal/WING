@@ -72,7 +72,6 @@ export function createHandler(generate: (messages: ModelMessage[], context: stri
     }
     const messages: ModelMessage[] = [...(history.get(historyKey) ?? []), { role: "user", content: text }];
     await space.responding(async () => {
-      if (/\b(search|find|look for|plan)\b/i.test(text) && /\b(flights?|trip)\b/i.test(text)) await space.send("on it ✈️");
       const recall = async () => {
         if (messages.length <= 1 || greeting.test(text) || text.startsWith("/")) return "";
         try {

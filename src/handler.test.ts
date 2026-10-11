@@ -216,13 +216,13 @@ test("first hello and onboarding commands never wait for historical memory", asy
   assert.deepEqual(dm.replies, ["hey!", "hey!"]);
 });
 
-test("flight searches acknowledge immediately before the slow model/provider call and keep one final reply", async () => {
+test("flight searches send one result without a separate acknowledgment", async () => {
   const dm = chat("dm");
-  const handle = createHandler(async () => { assert.deepEqual(dm.replies, ["on it ✈️"]); return "found a real flight"; }, emptyMemory, "test-project");
+  const handle = createHandler(async () => { assert.deepEqual(dm.replies, []); return "found a real flight"; }, emptyMemory, "test-project");
   await handle(dm, message("1", "find me a flight from CLT to DFW"));
-  assert.deepEqual(dm.replies, ["on it ✈️", "found a real flight"]);
+  assert.deepEqual(dm.replies, ["found a real flight"]);
   await handle(dm, message("1", "find me a flight from CLT to DFW"));
-  assert.equal(dm.replies.length, 2);
+  assert.equal(dm.replies.length, 1);
 });
 
 test("raw private messages never become Supermemory search queries", async () => {

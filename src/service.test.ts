@@ -105,8 +105,8 @@ test("a split review is recorded once and sent only after all bubbles are accept
   database.prepareReply = async (_owner, _space, text) => { assert.equal(text, review); events.push("prepare"); return outbound; };
   chat.send = async (text) => { assert.ok(!events.includes("sent")); sent.push(text); events.push("send"); };
   await createService(database, "project", async (space) => { await space.send(review); })(chat, message);
-  assert.equal(sent.length, 4);
-  assert.deepEqual(events, ["receive", "prepare", "send", "send", "send", "send", "sent", "handled"]);
+  assert.equal(sent.length, 3);
+  assert.deepEqual(events, ["receive", "prepare", "send", "send", "send", "sent", "handled"]);
 });
 
 test("a partial multi-bubble review stays unconfirmed and does not send its remaining bubbles", async () => {

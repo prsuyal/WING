@@ -3543,6 +3543,13 @@ body:has(dialog[open]) { overflow: hidden; }
 .boarding-route-codes .boarding-route-trail { flex: 1; min-width: 0; padding: 0; }
 .boarding-route-details { display: flex; justify-content: space-between; gap: 16px; }
 .boarding-return.compact .boarding-route-codes { gap: 12px; }
+
+.trip-share { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.trip-share .button { align-self: center; margin-inline: auto; }
+.trip-page:has(.trip-share) { padding-bottom: 260px; }
+@media (max-width: 640px) {
+  .trip-page:has(.trip-share) { padding-bottom: 140px; }
+}
 @media (max-width: 640px) {
   .boarding-route-codes { gap: 12px; }
   .boarding-route-codes .boarding-route-trail { gap: 6px; }

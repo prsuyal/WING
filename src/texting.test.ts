@@ -17,8 +17,8 @@ test("distinct thoughts become separate short bubbles without breaking lists or 
   assert.ok(bubbles.every((bubble) => !bubble.includes("\n\n")));
 });
 
-test("single newlines and multiple sentences separate complete thoughts without breaking decimal prices or inline URLs", () => {
-  assert.deepEqual(chatBubbles("nice!\nwant to connect google calendar?"), ["nice!", "want to connect google calendar?"]);
-  assert.deepEqual(chatBubbles("got you! Want a ride?"), ["got you!", "want a ride?"]);
-  assert.deepEqual(chatBubbles("it costs $300.50\nconnect here https://example.com/Callback?t=AbCd"), ["it costs $300.50", "connect here https://example.com/Callback?t=AbCd"]);
+test("related sentences and single newlines stay together without breaking prices or URLs", () => {
+  assert.deepEqual(chatBubbles("nice!\nwant to connect google calendar?"), ["nice!\nwant to connect google calendar?"]);
+  assert.deepEqual(chatBubbles("got you! Want a ride?"), ["got you! want a ride?"]);
+  assert.deepEqual(chatBubbles("it costs $300.50\nconnect here https://example.com/Callback?t=AbCd"), ["it costs $300.50\nconnect here https://example.com/Callback?t=AbCd"]);
 });

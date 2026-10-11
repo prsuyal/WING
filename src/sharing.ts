@@ -1,6 +1,9 @@
 import { createHash, randomBytes } from "node:crypto";
 import { z } from "zod";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { offerSchema, understands } from "./contracts.ts";
+import { rideSchema } from "./journey.ts";
+import { airports } from "./airports.ts";
 import type { Actor } from "./contracts.ts";
 import { confirmedFacts, type Facts } from "./profile.ts";
 
@@ -86,10 +89,8 @@ export function createSharingStore(client: SupabaseClient, websiteUrl: string) {
   }
   return {
     async create(actor: Actor, tripId: string) {
-      if (
-        !/\b(share|link)\b/i.test(actor.sourceText) ||
-        /\b(don't|do not|never|not|no)\b/i.test(actor.sourceText)
-      )
+      if (!await understands(actor, "Generate a read-only itinerary link for this trip so the traveler can share it with family or someone else. Accept natural requests such as 'can I send this to my parents', 'let my mom see the itinerary', or 'give me something to send home'; no exact keyword is required. This creates a link for the traveler, not a message to anyone else. Reject negation, hypothetical discussion or unrelated requests.",
+        /\b(share|link)\b/i.test(actor.sourceText) && !/\b(don't|do not|never|not|no)\b/i.test(actor.sourceText)))
         throw new Error("Ask the traveler before creating a share link");
       await ownedTrip(actor, tripId);
       const token = randomBytes(32).toString("base64url");
@@ -114,7 +115,7 @@ export function createSharingStore(client: SupabaseClient, websiteUrl: string) {
         expiresAt,
         viewOnly: true,
         notice:
-          "Anyone with this link can see the traveler's saved display name, confirmed airports and dates, and planning status. Flights and rides are not arranged. Localhost links open only on the machine running the website.",
+          "Anyone with this link can view the trip for seven days.",
       };
     },
     async revoke(actor: Actor, tripId: string) {
@@ -145,7 +146,7 @@ export function createSharingStore(client: SupabaseClient, websiteUrl: string) {
         .maybeSingle();
       if (linkError) throw new Error("Sharing temporarily unavailable");
       if (!link) return null;
-      const [trip, profile] = await Promise.all([
+      const [trip, profile, reservation] = await Promise.all([
         client
           .from("wing_trips")
           .select("facts,updated_at")
@@ -157,14 +158,49 @@ export function createSharingStore(client: SupabaseClient, websiteUrl: string) {
           .select("facts")
           .eq("owner_id", link.owner_id)
           .maybeSingle(),
+        client.from("wing_flight_reservations").select("action_id,offer,created_at")
+          .eq("owner_id", link.owner_id).eq("trip_id", link.trip_id).maybeSingle(),
       ]);
-      if (trip.error || profile.error)
+      if (trip.error || profile.error || reservation.error)
         throw new Error("Trip temporarily unavailable");
       if (!trip.data) return null;
-      return projectPlanningSummary(
+      const summary = projectPlanningSummary(
         trip.data as { facts: Facts; updated_at: string },
         (profile.data?.facts ?? {}) as Facts,
       );
+      if (!reservation.data) return summary;
+      const offer = offerSchema.parse(reservation.data.offer);
+      if (offer.ownerId !== link.owner_id || offer.tripId !== link.trip_id) throw new Error("Booking scope mismatch");
+      const [action, ride] = await Promise.all([
+        client.from("wing_flight_actions").select("status,offer")
+          .eq("owner_id", link.owner_id).eq("trip_id", link.trip_id).eq("id", reservation.data.action_id).maybeSingle(),
+        client.from("wing_journey_actions").select("payload,created_at")
+          .eq("owner_id", link.owner_id).eq("trip_id", link.trip_id).eq("flight_action_id", reservation.data.action_id)
+          .eq("kind", "ride").eq("status", "confirmed").maybeSingle(),
+      ]);
+      if (action.error || ride.error) throw new Error("Trip temporarily unavailable");
+      if (action.data?.status !== "confirmed" || JSON.stringify(offerSchema.parse(action.data.offer)) !== JSON.stringify(offer)) throw new Error("Booking not verified");
+      const leg = (segment: typeof offer.outbound[number]) => ({
+        flightNumber: segment.flightNumber, departureAirport: segment.departureAirport, arrivalAirport: segment.arrivalAirport,
+        departureName: airports[segment.departureAirport]?.name ?? segment.departureAirport,
+        arrivalName: airports[segment.arrivalAirport]?.name ?? segment.arrivalAirport,
+        departureCity: airports[segment.departureAirport]?.city ?? segment.departureAirport,
+        arrivalCity: airports[segment.arrivalAirport]?.city ?? segment.arrivalAirport,
+        departsAt: segment.departsAt, arrivesAt: segment.arrivesAt,
+        departureTimeZone: segment.departureTimeZone, arrivalTimeZone: segment.arrivalTimeZone,
+      });
+      const first = offer.outbound[0]!, last = offer.outbound.at(-1)!;
+      const localDate = (instant: string, zone: string) => new Intl.DateTimeFormat("en-CA", { timeZone: zone, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(instant));
+      const pickup = ride.data ? rideSchema.parse(ride.data.payload) : null;
+      if (pickup && pickup.airport !== first.departureAirport) throw new Error("Ride scope mismatch");
+      return publicSummarySchema.parse({
+        ...summary, status: "booked", departureAirport: first.departureAirport, arrivalAirport: last.arrivalAirport,
+        outboundDate: localDate(first.departsAt, first.departureTimeZone),
+        returnDate: localDate(offer.inbound[0]!.departsAt, offer.inbound[0]!.departureTimeZone),
+        updatedAt: [summary.updatedAt, reservation.data.created_at, ride.data?.created_at].filter((value): value is string => !!value).sort((a, b) => Date.parse(b) - Date.parse(a))[0],
+        booking: { airline: offer.airline, cabin: offer.cabin, baggage: offer.baggage, outbound: offer.outbound.map(leg), inbound: offer.inbound.map(leg), simulated: true },
+        ...(pickup ? { ride: { provider: "Uber", status: "reserved", pickupLabel: "Trip pickup", airport: pickup.airport, pickupAt: pickup.pickupAt, airportAt: pickup.airportAt, timeZone: pickup.timeZone, simulated: true } } : {}),
+      });
     },
   };
 }

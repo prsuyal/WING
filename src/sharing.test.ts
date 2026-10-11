@@ -7,6 +7,8 @@ import {
   projectPlanningSummary,
   shareTokenPattern,
 } from "./sharing.ts";
+import { demoInventory, planningSchema, datePairs } from "./flights.ts";
+import { plannedRide } from "./journey.ts";
 import type { Actor } from "./contracts.ts";
 
 const owner = "00000000-0000-4000-8000-000000000001";
@@ -138,6 +140,18 @@ test("creation verifies ownership and stores a hash rather than the bearer token
       )
       .every((url) => url.searchParams.get("owner_id") === `eq.${owner}`),
   );
+  const natural = await createSharingStore(client, "https://wing-hacknc.vercel.app").create({
+    ...actor, sourceText: "can i send this to my parents?", interpret: async (operation) => {
+      assert.match(operation, /read-only itinerary link/);
+      return true;
+    },
+  }, trip);
+  assert.equal(new URL(natural.url).origin, "https://wing-hacknc.vercel.app");
+  const before = calls.length;
+  await assert.rejects(createSharingStore(client, "https://wing-hacknc.vercel.app").create({
+    ...actor, sourceText: "don't let my parents see it", interpret: async () => false,
+  }, trip), /Ask the traveler/);
+  assert.equal(calls.length, before);
 });
 
 test("another sender cannot create or revoke a link for a trip they do not own", async () => {
@@ -175,6 +189,7 @@ test("summary lookup enforces expiry and revocation and scopes records to their 
         calls.push(url);
         if (url.pathname.endsWith("wing_trip_links"))
           return Response.json({ owner_id: owner, trip_id: trip });
+        if (url.pathname.endsWith("wing_flight_reservations")) return Response.json(null);
         if (url.pathname.endsWith("wing_trips"))
           return Response.json({
             facts: { departureAirport: fact("RDU"), budgetCents: fact(25000) },
@@ -211,4 +226,45 @@ test("summary lookup enforces expiry and revocation and scopes records to their 
     await createSharingStore(missing, "http://localhost:3000").summary(token),
     null,
   );
+});
+
+
+test("shared booked itinerary uses verified flights and confirmed ride while omitting private records", async () => {
+  const prefs = planningSchema.parse({ departureAirport: "RDU", arrivalAirport: "EWR", outboundDate: "2026-11-06", returnDate: "2026-11-09", timeZone: "America/New_York", baggage: "carry_on" });
+  const offer = demoInventory(owner, trip, prefs, datePairs(prefs, false, "2026-10-11T00:00:00Z"), false, "2026-10-11T00:00:00Z")[0]!;
+  const flightId = "00000000-0000-4000-8000-000000000004";
+  const ride = plannedRide(offer, "123 Private Street", {}, 1, "Private payment");
+  let withRide = true, verified = true;
+  const calls: URL[] = [];
+  const client = createClient("https://example.supabase.co", "unit-key", { global: { fetch: async (input) => {
+    const url = new URL(String(input)); calls.push(url);
+    assert.equal(url.searchParams.get("owner_id"), url.pathname.endsWith("wing_trip_links") ? null : `eq.${owner}`);
+    switch (url.pathname.split("/").at(-1)) {
+      case "wing_trip_links": return Response.json({ owner_id: owner, trip_id: trip });
+      case "wing_trips": return Response.json({ facts: { departureAirport: fact("JFK") }, updated_at: "2026-10-10T00:00:00Z", pickup_override: "Private Street" });
+      case "wing_profiles": return Response.json({ facts: { name: fact("Alex") } });
+      case "wing_flight_reservations": return Response.json({ action_id: flightId, offer, created_at: "2026-10-11T01:00:00Z", reference: "PRIVATE-CONFIRMATION" });
+      case "wing_flight_actions": return Response.json({ status: verified ? "confirmed" : "review", offer });
+      case "wing_journey_actions":
+        assert.equal(url.searchParams.get("status"), "eq.confirmed");
+        assert.equal(url.searchParams.get("kind"), "eq.ride");
+        assert.equal(url.searchParams.get("flight_action_id"), `eq.${flightId}`);
+        return Response.json(withRide ? { payload: ride, created_at: "2026-10-11T02:00:00Z" } : null);
+      default: throw new Error("Unexpected query");
+    }
+  } } });
+  const sharing = createSharingStore(client, "https://wing.example");
+  const summary = (await sharing.summary(token))!;
+  assert.equal(summary.status, "booked");
+  assert.equal(summary.departureAirport, "RDU");
+  assert.equal(summary.booking!.outbound[0]!.flightNumber, offer.outbound[0]!.flightNumber);
+  assert.equal(summary.booking!.inbound[0]!.arrivesAt, offer.inbound[0]!.arrivesAt);
+  assert.equal(summary.ride!.pickupAt, ride.pickupAt);
+  assert.equal(summary.ride!.provider, "Uber");
+  assert.equal(summary.updatedAt, "2026-10-11T02:00:00Z");
+  for (const secret of [owner, trip, flightId, "Private Street", "Private payment", "PRIVATE-CONFIRMATION", "totalCents", "sourceMessageId"]) assert.equal(JSON.stringify(summary).includes(secret), false);
+  withRide = false;
+  assert.equal((await sharing.summary(token))!.ride, undefined);
+  verified = false;
+  await assert.rejects(sharing.summary(token), /Booking not verified/);
 });

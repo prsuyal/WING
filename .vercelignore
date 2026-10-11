@@ -1,0 +1,13 @@
+node_modules
+website/node_modules
+website/.next
+.env*
+**/.env*
+/images
+/assets
+/data
+/docs
+/scripts
+/supabase
+/verification
+src/*

@@ -89,7 +89,7 @@ export function SampleTrip() {
       <div className="trip-container boarding-view">
         <BoardingHeader title="Aarnav's trip home." subtitle="Raleigh to Newark · November 6–9, 2026">
           <section className="boarding-header-timeline" aria-labelledby="afternoon-title">
-            <h2 id="afternoon-title">Alex’s journey</h2>
+            <h2 id="afternoon-title">Aarnav’s journey</h2>
             <ol className="boarding-timeline horizontal">
               <li><time>2:00 PM</time><h3>Ride to RDU</h3><p>Campus pickup · Reserved</p></li>
               <li className="current"><time>5:10 PM</time><h3>Take off</h3><p>Updated departure · Flight 101</p></li>

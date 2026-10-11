@@ -22,6 +22,7 @@ import { createJourneys } from "./journey.ts";
 import { createAlerts } from "./alerts.ts";
 import { createAlertWorker } from "./alert-worker.ts";
 import { createBookings } from "./booking.ts";
+import { createSharingStore } from "./sharing.ts";
 
 try { loadEnvFile(); } catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
 for (const name of ["PROJECT_ID", "PROJECT_SECRET", "ANTHROPIC_API_KEY", "SUPERMEMORY_API_KEY", "SUPABASE_URL", "SUPABASE_SECRET_KEY", "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "CREDENTIAL_ENCRYPTION_KEY", "PUBLIC_BASE_URL"]) {
@@ -54,7 +55,8 @@ const flights = createFlightPlanner(client, profiles, { calendar, schedules }, {
 const bookings = createBookings(client, profiles, flights);
 const journeys = createJourneys(client, profiles, calendar);
 const alerts = createAlerts(client, profiles, flights);
-const agent = createAgent(model, profiles, { calendar, schedules }, flights, bookings, journeys, alerts);
+const sharing = createSharingStore(client, process.env.WING_WEBSITE_URL || "http://localhost:3000");
+const agent = createAgent(model, profiles, { calendar, schedules }, flights, bookings, journeys, alerts, sharing);
 const handle = createHandler(agent, {
   recall: recalled.recall,
   // Only validated travel facts enter the durable indexing queue; never forward raw chat exchanges.
@@ -82,8 +84,8 @@ const app = await Spectrum({
   projectSecret: process.env.PROJECT_SECRET!,
   providers: [imessage.config()],
 });
-const server = createHttpServer(calendar.http);
-server.listen(Number(process.env.PORT || 3000), "0.0.0.0");
+const server = createHttpServer(calendar.http, sharing);
+server.listen(Number(process.env.PORT || 3001), "0.0.0.0");
 server.on("error", () => { console.error("HTTP service failed to start."); process.exit(1); });
 console.log("wing Phase 7 listening. Durable price watches and approved reminders enabled.");
 const runAlerts = createAlertWorker(client, flights, { async resolve(spaceId) {

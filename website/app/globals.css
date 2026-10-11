@@ -2975,12 +2975,13 @@ button:disabled:focus-visible {
 }
 .iphone-chat .bubble {
   max-width: 89%;
-  padding: 9px 12px;
+  padding: 6px 11px;
   font-size: 14px;
   line-height: 1.32;
   border-radius: 18px;
   letter-spacing: -0.2px;
 }
+.iphone-chat .bubble-text { position: relative; z-index: 1; }
 .iphone-chat .sent { background: #007aff; color: #fff; }
 .iphone-chat .received { background: #e9e9eb; color: #111; }
 /* Two rounded shapes create the curved iMessage tail without a sharp wedge. */
@@ -3192,7 +3193,7 @@ button:disabled:focus-visible {
 }
 
 .message-slot { position: relative; width: fit-content; max-width: 89%; }
-.message-slot.outgoing { align-self: flex-end; }
+.message-slot.outgoing { align-self: flex-end; max-width: 78%; }
 .iphone-chat .message-slot .bubble { max-width: 100%; }
 .typing-bubble {
   position: absolute;

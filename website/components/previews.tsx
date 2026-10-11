@@ -100,10 +100,42 @@ function MessageSequence({
 }
 
 export function Bubble({ sent = false, children }: { sent?: boolean; children: React.ReactNode }) {
+  const bubble = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const element = bubble.current;
+    if (!element) return;
+    const fit = () => {
+      const slot = element.parentElement!;
+      const conversation = slot.parentElement!;
+      const containerStyle = getComputedStyle(conversation);
+      const available = conversation.clientWidth - parseFloat(containerStyle.paddingLeft) - parseFloat(containerStyle.paddingRight);
+      const style = getComputedStyle(element);
+      // Measure without the phone's rotation or scroll transforms.
+      const probe = document.createElement("div");
+      Object.assign(probe.style, {
+        position: "fixed", visibility: "hidden", pointerEvents: "none",
+        width: `${available * (sent ? 0.78 : 0.89)}px`, boxSizing: "border-box",
+        padding: style.padding, font: style.font, letterSpacing: style.letterSpacing,
+      });
+      probe.textContent = element.textContent;
+      document.body.appendChild(probe);
+      const range = document.createRange();
+      range.selectNodeContents(probe);
+      const longestLine = Math.max(0, ...Array.from(range.getClientRects(), rect => rect.width));
+      element.style.width = `${Math.ceil(longestLine + parseFloat(style.paddingLeft) + parseFloat(style.paddingRight))}px`;
+      probe.remove();
+    };
+    fit();
+    document.fonts.ready.then(fit);
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, [children, sent]);
+
   return (
     <div className={`message-slot ${sent ? "outgoing" : "incoming"}`}>
-      <div className={`bubble ${sent ? "sent" : "received"}`}>
-        {children}
+      <div ref={bubble} className={`bubble ${sent ? "sent" : "received"}`}>
+        <span className="bubble-text">{children}</span>
       </div>
       {!sent && (
         <div className="typing-bubble" aria-hidden="true">
@@ -167,8 +199,8 @@ export function Conversation({ hero = false }: { hero?: boolean }) {
     <IPhoneChat hero={hero}>
       <MessageSequence scrollDriven={!hero}>
         <Bubble sent>{hero ? "Are there any flights home this weekend?" : "Get me home next weekend"}</Bubble>
-        <Bubble>{hero ? "The best flight home is on Saturday at 1:00 PM. Want me to book it?" : "Of course. RDU to EWR after your Friday classes?"}</Bubble>
-        <Bubble sent>Yep</Bubble>
+        <Bubble>{hero ? "the best flight home is on saturday at 1:00 PM. want me to book it?" : "of course. RDU to EWR after your friday classes?"}</Bubble>
+        <Bubble sent>{hero ? "Yep" : "Sounds good!"}</Bubble>
         {hero && <FlightOption />}
       </MessageSequence>
     </IPhoneChat>
@@ -180,10 +212,10 @@ function AlternativesPreview() {
   return (
     <IPhoneChat>
       <MessageSequence>
-        <Bubble>Flights from CLT to JFK are only $287 this Friday. Wanna book one?</Bubble>
+        <Bubble>flights from CLT to JFK are only $287 this friday. want to book one?</Bubble>
         <Bubble sent>Are there any flights on Thursday?</Bubble>
-        <Bubble>There’s a flight at 1:39 PM on Thursday but tickets start at $330. Want me to book this one?</Bubble>
-        <Bubble sent>Yes. Book the Thursday flight.</Bubble>
+        <Bubble>there’s a flight at 1:39 PM on thursday but tickets start at $330. want me to book this one?</Bubble>
+        <Bubble sent>Yeah, book the Thursday flight.</Bubble>
       </MessageSequence>
     </IPhoneChat>
   );
@@ -193,8 +225,8 @@ function RidePreview() {
   return (
     <IPhoneChat>
       <MessageSequence>
-        <Bubble>Want a ride to the airport? From Hardin Residence Hall to RDU at 4:00 PM. Fares are around $28.</Bubble>
-        <Bubble sent>Yes please</Bubble>
+        <Bubble>want a ride to the airport? from hardin residence hall to RDU at 4:00 PM. fares are around $28.</Bubble>
+        <Bubble sent>Yup</Bubble>
       </MessageSequence>
     </IPhoneChat>
   );

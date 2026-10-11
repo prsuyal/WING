@@ -6,8 +6,11 @@
   "scripts": {
     "start": "tsx src/index.ts",
     "dev": "tsx watch src/index.ts",
+    "dev:website": "npm --prefix website run dev",
+    "build:website": "npm --prefix website run build",
+    "check:website": "npm --prefix website run check",
     "check": "tsc --noEmit",
-    "test": "tsx --test src/*.test.ts",
+    "test": "tsx --test src/*.test.ts website/tests/*.test.ts",
     "check:foundation": "tsx scripts/check-foundation.ts",
     "check:phase-1": "tsx scripts/check-phase-1.ts",
     "check:phase-2": "tsx scripts/check-phase-2.ts",

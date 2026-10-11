@@ -13,12 +13,13 @@ import type { Onboarding } from "./onboarding.ts";
 
 test("onboarding introduces real search and asks Calendar immediately after origin without a timezone question", () => {
   assert.match(welcome, /real flights/);
-  assert.match(welcome, /booking is simulated/);
+  assert.doesNotMatch(welcome, /simulat/i);
   assert.equal((welcome.match(/\?/g) ?? []).length, 1);
   assert.equal(nextOnboarding({ departureAirport: "CLT" }, [], false), "calendar");
   assert.equal(nextOnboarding({ departureAirport: "CLT" }, ["calendar"], false), "homeAirport");
 });
-test("a saved cheapest preference advances onboarding without requiring a numeric budget", () => {
+test("onboarding skips budget and advances to baggage after saving the home airport", () => {
+  assert.equal(nextOnboarding({ departureAirport: "CLT", homeAirport: "DFW" }, ["calendar"], false), "baggage");
   assert.equal(nextOnboarding({ departureAirport: "CLT", homeAirport: "DFW", budgetCents: null }, ["calendar"], false), "baggage");
 });
 test("Dallas lookup and nearby comparisons stay in Dallas", () => {
@@ -31,6 +32,8 @@ test("Dallas lookup and nearby comparisons stay in Dallas", () => {
 test("unknown budget can be searched without an invented cap", () => {
   const values = planningSchema.parse({ departureAirport: "CLT", arrivalAirport: "DFW", outboundDate: "2026-12-14", returnDate: "2027-01-06", timeZone: "America/New_York" });
   assert.equal(values.budgetCents, null);
+  assert.equal(values.budgetMode, "cheapest");
+  assert.equal(planningSchema.parse({ ...values, budgetCents: 20000, budgetMode: undefined }).budgetMode, "hard_cap");
   assert.equal(values.budgetMeaning, "round_trip_airfare_per_person");
 });
 

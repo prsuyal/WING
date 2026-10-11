@@ -49,19 +49,23 @@ test("connection errors identify the failed step without exposing private URL or
   } finally { console.error = original; server.close(); await once(server, "close"); }
 });
 
-test("the consent page permits same-origin form POSTs while rejecting opaque and foreign origins", async () => {
+test("calendar consent and shared trip routes coexist while rejecting foreign origins", async () => {
   let claims = 0;
   const client = { from() {
     let updating = false;
     return { select() { return this; }, eq() { return this; }, is() { return this; }, gt() { return this; }, update() { updating = true; return this; }, async single() { if (updating) claims++; return { data: { owner_id: "synthetic-owner", token_hash: "synthetic-hash" }, error: null }; } };
   } } as unknown as SupabaseClient;
   let calendar: ReturnType<typeof createCalendar>;
-  const server = createHttpServer((request, response) => calendar.http(request, response));
+  const server = createHttpServer((request, response) => calendar.http(request, response), { summary: async () => null });
   server.listen(0, "127.0.0.1"); await once(server, "listening");
   const address = server.address(); assert.ok(address && typeof address !== "string");
   const origin = `http://127.0.0.1:${address.port}`;
   calendar = createCalendar(client, { baseUrl: origin, clientId: "synthetic-client", clientSecret: "synthetic-secret", encryptionKey: "a".repeat(64) });
   try {
+    const shared = await fetch(`${origin}/public/trips/${"s".repeat(43)}`);
+    assert.equal(shared.status, 404);
+    assert.deepEqual(await shared.json(), { error: "Link unavailable" });
+    assert.equal((await fetch(`${origin}/health`)).status, 200);
     const link = `${origin}/auth/google/start?t=${"x".repeat(43)}`;
     const landing = await fetch(link);
     assert.equal(landing.status, 200);

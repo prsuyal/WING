@@ -62,7 +62,7 @@ test("confirmation invitations are checked as confirmations, not premature calen
 });
 
 
-test("model messages containing two sentences become two thoughts before the review is checked", async () => {
+test("related confirmation sentences stay in one message before verification", async () => {
   const model = new MockLanguageModelV3({ doGenerate: [result('{"messages":["Nice! Your simulated ride is saved."]}'), result('{"faithful":true}')] });
-  assert.equal(await presentReply(model)("verified simulated ride confirmation", "confirmation"), "nice!\n\nyour simulated ride is saved");
+  assert.equal(await presentReply(model)("verified simulated ride confirmation", "confirmation"), "nice! your simulated ride is saved");
 });

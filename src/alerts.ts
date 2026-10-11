@@ -6,6 +6,7 @@ import { demoInventory, planningSchema } from "./flights.ts";
 import type { FlightPlanner } from "./flight-store.ts";
 import { selectedOption } from "./booking.ts";
 import { qualifiesPrice, priceNotice, reminderTime } from "./notifications.ts";
+import { zoneSchema } from "./schedule.ts";
 
 export const watchInputSchema = z.object({ reference: z.string().optional(), option: z.number().int().min(1).max(3).default(1), mode: z.enum(["target", "drop"]), targetCents: z.number().int().min(100).max(200000).optional(), minimumDropCents: z.number().int().min(100).max(100000).default(2000), notify: z.boolean().default(false) }).strict();
 const positiveRequest = (text: string, action: string) => new RegExp(`\\b(${action})\\b`, "i").test(text) && !new RegExp(`\\b(don't|do not|never|not)\\s+(?:\\w+\\s+)?(${action})\\b`, "i").test(text.replaceAll("’", "'"));
@@ -76,7 +77,7 @@ export function createAlerts(client: SupabaseClient, profiles: ProfileStore, fli
     },
     async reminders(actor: Actor, reference?: string) {
       if (!await understands(actor, "Enable future text reminders for this booked trip, not calendar popup reminders", positiveRequest(actor.sourceText, "remind|reminders|text"))) throw new Error("Ask for text reminders explicitly");
-      const state = await profiles.state(actor.userId), trip = actorTrip(state, actor, reference), zone = planningSchema.shape.timeZone.parse(confirmedFacts(state.profile).timeZone);
+      const state = await profiles.state(actor.userId), trip = actorTrip(state, actor, reference), zone = zoneSchema.parse(confirmedFacts(state.profile).timeZone);
       const { data: reservation, error } = await client.from("wing_flight_reservations").select("action_id,offer").eq("owner_id", actor.userId).eq("trip_id", trip.id).single();
       if (error) throw new Error("Book a flight before adding reminders");
       const offer = offerSchema.parse(reservation.offer);

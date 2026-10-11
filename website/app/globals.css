@@ -1,0 +1,3562 @@
+@import url("../public/paper.css");
+
+:root {
+  --paper: #fff8eb;
+  --navy: #052d68;
+  --sky: #a8d8f5;
+  --pale: #e7f3fc;
+  --blue: #168af0;
+  --surface: #fffdfa;
+  --muted: #385582;
+  --line: #d8d9d6;
+  --shadow: 0 4px 20px #052d6810;
+  --radius: 22px;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 24px;
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--navy);
+  font-family: "Nunito", sans-serif;
+  font-weight: 600;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+button,
+input {
+  font: inherit;
+}
+button,
+a {
+  touch-action: manipulation;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button {
+  color: inherit;
+  cursor: pointer;
+}
+button:disabled {
+  cursor: default;
+  opacity: 0.52;
+}
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+h1,
+h2,
+h3 {
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.03;
+}
+h1 {
+  font-size: clamp(44px, 6.8vw, 88px);
+}
+h2 {
+  font-size: clamp(32px, 3.8vw, 50px);
+}
+h3 {
+  font-size: 24px;
+}
+p {
+  font-size: 18px;
+}
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 5px;
+}
+button:disabled:focus-visible {
+  outline: none;
+}
+.icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+.sr-only {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 15px;
+  z-index: 1000;
+  padding: 12px 20px;
+  background: var(--surface);
+  border: 2px solid var(--navy);
+}
+.skip-link:focus-visible {
+  top: 10px;
+}
+.button {
+  min-height: 48px;
+  padding: 12px 25px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-radius: 15px;
+  border: 1.5px solid transparent;
+  font-weight: 800;
+  font-size: 17px;
+  transition:
+    background 0.18s,
+    box-shadow 0.18s;
+}
+.primary {
+  background: var(--navy);
+  color: white;
+  box-shadow: inset 0 -3px 0 #001c441f;
+}
+.primary:hover:not(:disabled) {
+  background: #064284;
+}
+.secondary {
+  border-color: var(--navy);
+  background: transparent;
+  color: var(--navy);
+}
+.secondary:hover:not(:disabled) {
+  background: var(--pale);
+}
+.text-link {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  font-weight: 800;
+  font-size: 15px;
+  min-height: 44px;
+}
+.text-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.text-link .icon {
+  width: 18px;
+  height: 18px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 900;
+  font-size: 31px;
+  letter-spacing: -1.2px;
+  flex-shrink: 0;
+  min-height: 44px;
+}
+.brand svg {
+  width: 43px;
+  height: 38px;
+}
+.navigation {
+  position: relative;
+  z-index: 10;
+}
+.nav-inner {
+  max-width: 1200px;
+  margin: auto;
+  padding: 22px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-inner nav {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  font-size: 15px;
+  font-weight: 700;
+}
+.nav-inner nav > a {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+.nav-cta {
+  min-height: 42px;
+  font-size: 15px;
+  border-radius: 12px;
+  padding: 9px 23px;
+}
+.hero {
+  position: relative;
+  min-height: 660px;
+  overflow: hidden;
+}
+.hero-inner {
+  position: relative;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 68px 40px 190px;
+  display: grid;
+  grid-template-columns: 1.03fr 1fr;
+  gap: 32px;
+  z-index: 2;
+}
+.hero-copy {
+  align-self: center;
+  position: relative;
+  z-index: 2;
+}
+.hero h1 {
+  font-size: clamp(56px, 6.8vw, 89px);
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+  margin: 0 0 22px;
+}
+.hero-copy > p {
+  font-size: 24px;
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+}
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 24px;
+}
+.hero-actions .button {
+  min-width: 175px;
+  border-radius: 22px;
+}
+.hero-helper {
+  display: block;
+  font-size: 13px;
+  margin-top: 13px;
+}
+.hero-visual {
+  position: relative;
+  min-height: 430px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.hero-phone {
+  width: 322px;
+  transform: rotate(3deg);
+  background: #fffdf9;
+  border: 1px solid #d8d4ca;
+  box-shadow: 0 6px 22px #34271322;
+  border-radius: 30px;
+  position: relative;
+  z-index: 3;
+}
+.phone-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px 7px;
+  border-bottom: 1px solid #ece8e1;
+}
+.phone-header > span {
+  font-size: 27px;
+  color: var(--blue);
+}
+.phone-header > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.phone-header strong {
+  font-size: 12px;
+}
+.phone-avatar {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  background: var(--sky);
+  padding: 4px;
+}
+.phone-avatar svg {
+  width: 32px;
+  height: 32px;
+}
+.conversation-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 17px 16px;
+}
+.bubble {
+  padding: 11px 13px;
+  border-radius: 17px;
+  font-size: 14px;
+  line-height: 1.35;
+  max-width: 91%;
+  position: relative;
+}
+.sent {
+  background: #0672d6;
+  color: #fff;
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+.received {
+  background: var(--pale);
+  border-bottom-left-radius: 4px;
+}
+.bubble strong {
+  font-weight: 900;
+}
+.flight-option {
+  background: var(--surface);
+  border: 1px solid #e8e4dd;
+  width: 100%;
+  border-radius: 15px;
+  padding: 13px 13px 9px;
+  box-shadow: 0 2px 8px #052d6809;
+}
+.card-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  margin-bottom: 3px;
+}
+.flight-route {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.flight-route strong {
+  font-size: 24px;
+  letter-spacing: -1px;
+  font-weight: 900;
+}
+.flight-route > svg {
+  width: 21px;
+  height: 21px;
+  flex-shrink: 0;
+}
+.flight-dashes {
+  height: 8px;
+  flex: 1;
+  border-bottom: 2px dashed #168af0;
+  transform: translateY(-2px) rotate(7deg);
+}
+.flight-dashes:last-of-type {
+  transform: translateY(-2px) rotate(-7deg);
+}
+.flight-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+}
+.flight-meta p {
+  font-size: 11px;
+  line-height: 1.35;
+}
+.flight-meta p:last-child {
+  text-align: right;
+}
+.flight-meta strong {
+  font-size: 16px;
+  font-weight: 900;
+}
+.flight-disclaimer {
+  font-size: 9px;
+  text-align: center;
+  color: var(--muted);
+  margin-top: 9px;
+  border-top: 1px solid #e8e4dd;
+  padding-top: 7px;
+}
+.message-input {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 0 14px 5px;
+  color: #677997;
+  font-size: 11px;
+}
+.message-input > span:first-child {
+  font-size: 21px;
+  width: 28px;
+  text-align: center;
+  background: #f0ede8;
+  border-radius: 50%;
+  color: var(--navy);
+}
+.message-input > span:nth-child(2) {
+  flex: 1;
+  border: 1px solid #e2dfd8;
+  border-radius: 15px;
+  padding: 5px 10px;
+}
+.message-input > span:last-child {
+  font-size: 17px;
+}
+.phone-disclosure {
+  text-align: center;
+  font-size: 9px;
+  color: var(--muted);
+  padding-bottom: 11px;
+}
+.hero-plane-trail {
+  position: absolute;
+  width: 275px;
+  left: -105px;
+  top: -12px;
+  transform: rotate(-6deg);
+  z-index: 4;
+}
+
+
+.hero-plane-trail > .hero-flight-art { width: 100%; height: auto; overflow: visible; }
+.hero-cloud {
+  position: absolute;
+  width: 160px;
+  z-index: 1;
+}
+.hero-cloud.left {
+  left: -45px;
+  top: 5px;
+}
+.hero-cloud.right {
+  right: 4%;
+  top: 18px;
+  width: 120px;
+}
+.cloud-bank {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 240px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.cloud-bank img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 78%;
+}
+.cloud-bank-fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(var(--paper), transparent 45%);
+}
+.hero-cloud-bank {
+  height: 260px;
+}
+.hero-cloud-bank img {
+  object-position: center 74%;
+}
+.suitcase {
+  position: absolute;
+  right: -7px;
+  bottom: -2px;
+  width: 100px;
+  height: 140px;
+  transform: rotate(9deg);
+  z-index: 4;
+}
+.suitcase-body {
+  position: absolute;
+  inset: 30px 0 8px;
+  border: 4px solid var(--navy);
+  border-radius: 19px;
+  background: #8bc9ef;
+  box-shadow:
+    inset 6px 0 #e7f3fc,
+    inset -8px 0 #4b9ad5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 17px;
+  gap: 6px;
+}
+.suitcase-body svg {
+  width: 50px;
+  background: var(--surface);
+  padding: 3px;
+  border-radius: 4px;
+  transform: rotate(-10deg);
+}
+.suitcase-body span {
+  height: 4px;
+  width: 24px;
+  background: var(--navy);
+  border-radius: 4px;
+}
+.suitcase-handle {
+  position: absolute;
+  top: 0;
+  left: 30px;
+  right: 30px;
+  height: 40px;
+  border: 4px solid var(--navy);
+  border-bottom: none;
+  border-radius: 6px;
+  background: linear-gradient(#87c6ef 7px, transparent 7px);
+}
+.suitcase i {
+  position: absolute;
+  bottom: 1px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--navy);
+  left: 12px;
+}
+.suitcase i:last-child {
+  left: auto;
+  right: 12px;
+}
+.walkthrough {
+  overflow-x: clip;
+  position: relative;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 22px 40px 60px;
+}
+.story-heading {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding-bottom: 35px;
+}
+.story-heading > p {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+.story-heading h2 {
+  font-size: 43px;
+}
+.story-heading .text-link {
+  color: #0769cc;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  margin-top: 5px;
+}
+.story-trail {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+  width: 80px;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+.story-progress {
+  position: sticky;
+  top: 22vh;
+  height: 100px;
+  width: 3px;
+  left: 0;
+  margin-bottom: -100px;
+  background: #052d6810;
+  z-index: 2;
+}
+.story-progress-line {
+  width: 100%;
+  height: 100%;
+  background: var(--blue);
+}
+.scenes {
+  position: relative;
+  z-index: 1;
+}
+.scene {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 110px;
+  position: relative;
+  min-height: 300px;
+  margin: 26px 0 45px;
+}
+.scene-copy {
+  display: flex;
+  gap: 17px;
+  align-items: flex-start;
+}
+.scene-number {
+  flex-shrink: 0;
+  width: 47px;
+  height: 47px;
+  border-radius: 50%;
+  background: var(--sky);
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1;
+  margin-top: 3px;
+}
+.scene-copy h3 {
+  font-size: clamp(27px, 3.1vw, 37px);
+  line-height: 1.06;
+}
+.scene-copy p {
+  max-width: 280px;
+  margin-top: 15px;
+  font-size: 17px;
+  line-height: 1.4;
+}
+.scene-note {
+  display: block;
+  margin-top: 16px;
+  font-size: 17px;
+  font-weight: 900;
+}
+.scene-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 285px;
+}
+.scene:nth-of-type(even) .scene-copy {
+  grid-column: 2;
+  grid-row: 1;
+}
+.scene:nth-of-type(even) .scene-visual {
+  grid-column: 1;
+  grid-row: 1;
+}
+.scene-1 .scene-visual {
+  gap: 20px;
+  flex-direction: column;
+  padding-top: 0;
+}
+.scene-1 .conversation {
+  width: 277px;
+  transform: rotate(-2deg);
+  background: #fffdf9;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+}
+.route-illustration {
+  width: 100%;
+  max-width: 390px;
+  position: relative;
+  min-height: 180px;
+}
+.route-illustration > .route-schematic {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 170px;
+}
+.route-cloud {
+  position: absolute;
+  z-index: 0;
+}
+.route-cloud.one {
+  width: 210px;
+  left: 0;
+  bottom: 2px;
+}
+.route-cloud.two {
+  width: 200px;
+  right: -10px;
+  top: 2px;
+}
+.route-plane {
+  width: 92px;
+  position: absolute;
+  left: 54%;
+  top: 7%;
+  z-index: 3;
+  transform: rotate(-3deg);
+}
+.scene-1 .route-illustration {
+  width: 310px;
+  min-height: 125px;
+  margin: -35px -40px -30px 130px;
+}
+.scene-1 .route-illustration > .route-schematic {
+  height: 125px;
+}
+.scene-1 .route-plane {
+  width: 66px;
+}
+.scene-1 .route-cloud.one {
+  width: 150px;
+}
+.scene-1 .route-cloud.two {
+  width: 145px;
+}
+.scene-cloud {
+  position: absolute;
+  width: 126px;
+  bottom: -32px;
+  left: -42px;
+  z-index: -1;
+}
+.scene-3 .scene-cloud {
+  right: -40px;
+  left: auto;
+}
+.scene-visual .travel-drawing {
+  position: absolute;
+  max-width: 190px;
+  right: -72px;
+  bottom: -40px;
+  transform: rotate(5deg);
+}
+.scene-4 .scene-visual .travel-drawing {
+  right: -75px;
+  bottom: -35px;
+  width: 200px;
+  transform: none;
+}
+.scene-copy .travel-drawing {
+  width: 240px;
+  margin-top: 20px;
+  margin-left: -20px;
+  margin-bottom: -45px;
+}
+.scene-copy .travel-drawing.ticket {
+  transform: translate(155px, 40px);
+}
+.schedule-preview {
+  width: 285px;
+  background: var(--surface);
+  border: 1px solid #e4dfd4;
+  border-radius: 17px;
+  box-shadow: var(--shadow);
+  padding: 13px 13px 10px;
+  transform: rotate(-2deg);
+  margin-right: 0;
+}
+.calendar-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.calendar-top strong {
+  font-weight: 900;
+}
+.calendar-grid {
+  position: relative;
+}
+.calendar-hour {
+  display: flex;
+  gap: 8px;
+  height: 23px;
+}
+.calendar-hour > span {
+  font-size: 10px;
+  color: var(--muted);
+  width: 35px;
+}
+.calendar-hour > div {
+  flex: 1;
+  border-top: 1px solid #eae7df;
+  border-left: 1px solid #dfdad0;
+}
+.calendar-event {
+  position: absolute;
+  left: 48px;
+  right: 8px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  padding: 5px 8px;
+  font-size: 11px;
+  line-height: 1.2;
+}
+.calendar-event strong {
+  font-weight: 900;
+}
+.calendar-event span {
+  font-size: 10px;
+}
+.class-event {
+  top: 25px;
+  height: 38px;
+  background: #c6eaff;
+  border-left: 3px solid var(--blue);
+}
+.flight-event {
+  top: 169px;
+  height: 40px;
+  background: #0672d6;
+  color: #fff;
+  flex-direction: row;
+  align-items: center;
+  gap: 9px;
+}
+.flight-event .icon {
+  width: 23px;
+}
+.flight-event > div {
+  display: flex;
+  flex-direction: column;
+}
+.schedule-preview > p {
+  font-size: 9px;
+  text-align: center;
+  margin-top: 4px;
+  color: var(--muted);
+}
+.story-chat {
+  width: 280px;
+  background: #fffdf9;
+  border: 1px solid #e6e0d5;
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  transform: rotate(-1.2deg);
+}
+.story-chat .conversation-body {
+  padding: 13px;
+  gap: 9px;
+}
+.story-chat .bubble {
+  font-size: 12px;
+}
+.story-chat .flight-route strong {
+  font-size: 23px;
+}
+.ride-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid #e8e4dd;
+  border-radius: 12px;
+  box-shadow: 0 2px 7px #052d6809;
+  padding: 12px 10px;
+  width: 100%;
+}
+.ride-preview strong {
+  font-size: 13px;
+  font-weight: 900;
+}
+.ride-preview p {
+  font-size: 12px;
+}
+.icon-circle {
+  height: 45px;
+  width: 45px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #c7eaff;
+  flex-shrink: 0;
+}
+.icon-circle .icon {
+  width: 26px;
+  height: 26px;
+}
+.preview-footnote {
+  font-size: 9px;
+  text-align: center;
+  color: var(--muted);
+  width: 100%;
+  margin-top: 0;
+}
+.trip-preview {
+  width: 315px;
+  background: var(--surface);
+  border: 1px solid #e4dfd4;
+  border-radius: 19px;
+  box-shadow: var(--shadow);
+  padding: 18px;
+}
+.trip-preview h3 {
+  font-size: 17px;
+  letter-spacing: -0.02em;
+}
+.trip-preview h3 span {
+  font-size: 11px;
+  font-weight: 600;
+}
+.trip-preview ol {
+  list-style: none;
+  position: relative;
+  padding: 5px 0 0;
+  margin: 13px 0 17px;
+}
+.trip-preview ol:before {
+  position: absolute;
+  content: "";
+  width: 2px;
+  height: calc(100% - 55px);
+  background: var(--blue);
+  left: 18px;
+  top: 28px;
+}
+.trip-preview li {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 13px;
+}
+.trip-preview .icon-circle {
+  width: 37px;
+  height: 37px;
+}
+.trip-preview .icon-circle .icon {
+  width: 21px;
+  height: 21px;
+}
+.trip-preview strong {
+  font-size: 14px;
+  font-weight: 900;
+}
+.trip-preview p {
+  font-size: 11px;
+  line-height: 1.4;
+}
+.trip-preview .button {
+  width: 100%;
+  min-height: 37px;
+  font-size: 13px;
+  padding: 5px 9px;
+  border-color: #8dcbf7;
+  border-radius: 8px;
+  color: #0069d0;
+}
+.trip-preview .button .icon {
+  width: 16px;
+}
+.trip-preview .preview-footnote {
+  font-size: 9px;
+  margin-top: 8px;
+}
+.family-drawing {
+  display: flex;
+  align-items: center;
+  position: relative;
+  gap: 13px;
+  margin-top: 22px;
+}
+.family-drawing > span {
+  font-size: 26px;
+  color: #168af0;
+  letter-spacing: -7px;
+  white-space: nowrap;
+}
+.family-drawing > p {
+  font-size: 12px;
+  margin-top: 0;
+}
+.family-drawing > svg {
+  position: absolute;
+  width: 65px;
+  right: 0;
+  top: -18px;
+  transform: rotate(-7deg);
+}
+.faq-section {
+  overflow: visible;
+  position: relative;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 15px 40px 60px;
+}
+.faq-section h2 {
+  text-align: center;
+  font-size: 38px;
+  margin-bottom: 25px;
+}
+.faq-list {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+  margin: auto;
+  border: 1px solid #e4dfd4;
+  border-radius: 17px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  background: var(--surface);
+}
+.faq-row + .faq-row {
+  border-top: 1px solid #e4dfd4;
+}
+.faq-row h3 {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.faq-row button {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 53px;
+  padding: 13px 24px;
+  font-size: 15px;
+  font-weight: 800;
+  gap: 20px;
+}
+.faq-row button span {
+  font-size: 24px;
+  font-weight: 600;
+}
+.faq-row.open button {
+  background: transparent;
+}
+.faq-row > div {
+  overflow: hidden;
+}
+.faq-row > div > p {
+  font-size: 14px;
+  padding: 18px 24px;
+  line-height: 1.6;
+  font-weight: 600;
+}
+.faq-cloud {
+  position: absolute;
+  width: 180px;
+  z-index: 0;
+  top: 100px;
+}
+.faq-cloud.left {
+  left: 12px;
+}
+.faq-cloud.right {
+  right: 12px;
+  top: 190px;
+}
+.closing {
+  position: relative;
+  overflow: hidden;
+  min-height: 370px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 20px;
+}
+.closing-copy {
+  position: relative;
+  text-align: center;
+  z-index: 3;
+  max-width: 620px;
+  padding: 0 24px;
+}
+.closing h2 {
+  font-size: 41px;
+}
+.closing-copy > p {
+  font-size: 17px;
+  margin: 13px 0 20px;
+}
+.closing .button {
+  border-radius: 22px;
+  min-width: 180px;
+}
+.closing-copy > span {
+  display: block;
+  font-size: 12px;
+  margin-top: 13px;
+}
+.closing-plane {
+  position: absolute;
+  width: 92px;
+  right: 15%;
+  top: 65px;
+  transform: rotate(-5deg);
+  z-index: 2;
+}
+.closing .travel-drawing,
+.trip-page > .travel-drawing.home {
+  position: absolute;
+  right: 2%;
+  bottom: 0;
+  width: 280px;
+  z-index: 2;
+}
+.closing .cloud-bank {
+  height: 190px;
+}
+.closing .cloud-bank img {
+  object-position: center 70%;
+}
+.footer {
+  position: relative;
+  border-top: 1px solid #dadbd8;
+  background: var(--paper);
+  z-index: 2;
+}
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: 1200px;
+  margin: auto;
+  padding: 25px 40px;
+}
+.footer .brand {
+  font-size: 26px;
+}
+.footer .brand svg {
+  width: 37px;
+}
+.footer nav {
+  display: flex;
+  gap: 23px;
+  font-size: 13px;
+}
+.footer nav a {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+.footer p {
+  font-size: 11px;
+  line-height: 1.5;
+}
+.footer p span {
+  font-size: 10px;
+  color: var(--muted);
+}
+.setup-dialog {
+  padding: 0;
+  border: 1px solid #dedacf;
+  background: var(--paper);
+  border-radius: 28px;
+  width: 550px;
+  max-width: calc(100vw - 40px);
+  max-height: calc(100dvh - 40px);
+  color: var(--navy);
+  box-shadow: 0 12px 70px #001d4430;
+  overflow: auto;
+}
+.setup-dialog::backdrop {
+  background: #15212b92;
+  backdrop-filter: blur(2px);
+}
+.setup-dialog-inner {
+  position: relative;
+  text-align: center;
+  padding: 30px 45px 36px;
+  overflow: hidden;
+}
+.dialog-close {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  border: 0;
+  background: none;
+  min-height: 44px;
+  min-width: 44px;
+  display: grid;
+  place-items: center;
+  z-index: 2;
+}
+.dialog-close .icon {
+  width: 27px;
+  height: 27px;
+}
+.contact-avatar {
+  border-radius: 50%;
+  width: 108px;
+  height: 108px;
+  overflow: hidden;
+  background: #bce5ff;
+  margin: auto;
+  position: relative;
+}
+.contact-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: multiply;
+  transform: scale(1.35);
+}
+.contact-avatar.small {
+  width: 86px;
+  height: 86px;
+}
+.contact-name {
+  font-size: 25px;
+  letter-spacing: -1px;
+  font-weight: 900;
+  margin-top: 0;
+}
+.setup-dialog h2 {
+  font-size: 47px;
+  margin: 12px -15px 12px;
+  line-height: 1.02;
+}
+.setup-dialog-inner > p:not(.contact-name) {
+  font-size: 19px;
+}
+.qr-frame {
+  position: relative;
+  background: #c9eaff;
+  border-radius: 25px;
+  padding: 15px;
+  width: 218px;
+  min-height: 216px;
+  margin: 18px auto;
+  display: grid;
+  place-items: center;
+}
+.qr-frame img {
+  border-radius: 14px;
+  width: 188px;
+  height: 188px;
+}
+.qr-frame > span {
+  font-size: 16px;
+  line-height: 1.5;
+}
+.setup-dialog-inner > p.dialog-access {
+  font-size: 13px;
+  line-height: 1.5;
+  position: relative;
+  z-index: 2;
+}
+.setup-dialog .text-link {
+  font-size: 17px;
+  color: #0069d0;
+  margin-top: 12px;
+  position: relative;
+  z-index: 2;
+}
+.dialog-cloud {
+  position: absolute;
+  width: 110px;
+  bottom: 110px;
+  z-index: 0;
+}
+.dialog-cloud.left {
+  left: -23px;
+}
+.dialog-cloud.right {
+  right: -20px;
+}
+.setup-page {
+  max-width: 640px;
+  min-height: 100dvh;
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+  padding: 20px 22px 115px;
+}
+.setup-page > .brand {
+  justify-content: center;
+  font-size: 33px;
+  position: relative;
+  z-index: 2;
+}
+.setup-cloud {
+  position: absolute;
+  width: 125px;
+  top: 84px;
+  z-index: 0;
+}
+.setup-cloud.left {
+  left: -37px;
+}
+.setup-cloud.right {
+  right: -37px;
+}
+.setup-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 410px;
+  margin: 32px auto 0;
+}
+.setup-content > .contact-avatar,
+.setup-content > .contact-name {
+  display: none;
+}
+.setup-content h1 {
+  font-size: 46px;
+  line-height: 1.03;
+  margin-bottom: 20px;
+}
+.setup-lead {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+.contact-preview {
+  display: flex;
+  text-align: left;
+  align-items: center;
+  justify-content: center;
+  gap: 19px;
+  border-radius: 21px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  padding: 15px 25px;
+  border: 1px solid #e8e2d8;
+  margin: 0 auto 18px;
+  max-width: 330px;
+}
+.contact-preview > svg {
+  width: 60px;
+  height: 60px;
+  padding: 6px;
+  border-radius: 50%;
+  background: #c5eaff;
+}
+.contact-preview strong {
+  display: block;
+  font-size: 25px;
+  letter-spacing: -1px;
+  font-weight: 900;
+  line-height: 1.1;
+}
+.contact-preview span {
+  font-size: 14px;
+  color: var(--muted);
+}
+.access-notice {
+  display: flex;
+  gap: 10px;
+  text-align: left;
+  border: 1px solid #a4c8e3;
+  background: #e7f3fc;
+  padding: 15px;
+  border-radius: 14px;
+  margin: 20px 0;
+  font-size: 15px;
+}
+.access-notice p {
+  font-size: 14px;
+  margin-top: 3px;
+  line-height: 1.5;
+}
+.access-notice strong {
+  font-weight: 900;
+}
+.access-notice > .icon {
+  width: 21px;
+  height: 21px;
+  margin-top: 2px;
+}
+.setup-content > .button {
+  display: flex;
+  width: 100%;
+  margin-top: 12px;
+  border-radius: 25px;
+  min-height: 52px;
+}
+.setup-helper {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 14px;
+}
+.setup-divider {
+  height: 1px;
+  background: #d8d9d6;
+  margin: 22px 0;
+}
+.setup-instruction {
+  font-size: 15px;
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  text-align: left;
+}
+.setup-instruction > svg {
+  width: 35px;
+  flex-shrink: 0;
+}
+.setup-content > .text-link {
+  color: #0069d0;
+  margin-top: 13px;
+}
+.demo-footnote {
+  font-size: 12px;
+  margin-top: 22px;
+  color: var(--muted);
+}
+.setup-page .cloud-bank {
+  height: 160px;
+  z-index: 0;
+}
+.demo-banner {
+  text-align: center;
+  font-size: 15px;
+  background: #d4edf9;
+  padding: 10px 20px;
+}
+.trip-page {
+  position: relative;
+  overflow: hidden;
+  min-height: calc(100vh - 175px);
+  /* Reserve the cloud artwork’s full height below the page content. */
+  padding-bottom: 180px;
+}
+.trip-container {
+  position: relative;
+  z-index: 1;
+  max-width: 1180px;
+  margin: auto;
+  padding: 32px 40px 0;
+}
+.sample-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 20px;
+  text-align: center;
+}
+.trip-hero {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 50px;
+  align-items: center;
+  padding: 5px 15px 30px;
+}
+.trip-hero h1 {
+  font-size: clamp(45px, 5.6vw, 70px);
+  letter-spacing: -0.045em;
+}
+.trip-subtitle {
+  font-size: 22px;
+  margin-top: 12px;
+}
+.trip-hero .route-illustration {
+  max-width: 420px;
+  margin: 60px 0 0 auto;
+}
+.trip-hero .route-plane {
+  width: 138px;
+  top: -50px;
+  left: 45%;
+}
+.trip-hero .route-cloud.one {
+  bottom: -25px;
+  width: 230px;
+}
+.trip-hero .route-cloud.two {
+  right: -38px;
+  top: -50px;
+}
+.status-card {
+  display: flex;
+  gap: 17px;
+  padding: 23px 22px;
+  border-radius: 22px;
+  border: 1px solid #f3d7d1;
+  margin-top: 28px;
+}
+.status-card.delayed {
+  background: #fff1ed;
+}
+.status-card.planning {
+  background: #e7f3fc;
+  border-color: #c9e0ef;
+}
+.status-card .icon-circle {
+  height: 60px;
+  width: 60px;
+}
+.status-card .icon-circle .icon {
+  height: 39px;
+  width: 39px;
+}
+.icon-circle.warning {
+  background: #ffd9d5;
+  color: #a2161a;
+}
+.status-card h2 {
+  font-size: 34px;
+  margin-bottom: 8px;
+}
+.status-card p {
+  font-size: 21px;
+  line-height: 1.4;
+}
+.status-card small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 12px;
+  line-height: 1.4;
+}
+.trip-grid {
+  display: grid;
+  grid-template-columns: 0.94fr 1.06fr;
+  gap: 24px;
+}
+.trip-panel {
+  background: #fffdfaeb;
+  border: 1px solid #dcdcd5;
+  border-radius: 21px;
+  box-shadow: var(--shadow);
+  padding: 22px;
+}
+.trip-panel h2 {
+  font-size: 25px;
+  letter-spacing: -0.035em;
+  margin-bottom: 18px;
+}
+.flight-detail-card {
+  border: 1px solid #e5e0d8;
+  border-radius: 16px;
+  background: #fffdfa;
+  padding: 20px 17px;
+  box-shadow: 0 2px 10px #052d6806;
+}
+.flight-detail-card h3 {
+  font-size: 18px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  letter-spacing: -0.02em;
+}
+.flight-detail-card h3 .icon {
+  width: 25px;
+  height: 25px;
+  color: #006ac7;
+}
+.flight-detail-card .flight-route {
+  margin: 15px 0 10px;
+}
+.flight-detail-card .flight-route strong {
+  font-size: 32px;
+}
+.flight-detail-card .flight-route .icon {
+  color: #006ac7;
+  transform: rotate(40deg);
+}
+.flight-detail-card p {
+  font-size: 14px;
+}
+.flight-detail-card dl {
+  border-top: 1px solid #e2ddd4;
+  padding-top: 9px;
+  margin: 13px 0 0;
+}
+.flight-detail-card dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 6px;
+}
+.flight-detail-card dt,
+.flight-detail-card dd {
+  font-size: 14px;
+  margin: 0;
+}
+.flight-detail-card dd {
+  text-align: right;
+  font-weight: 800;
+}
+.desktop-return {
+  margin-top: 17px;
+}
+.mobile-return {
+  display: none;
+}
+.journey-column {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.journey-list {
+  padding: 0;
+  list-style: none;
+  margin: 0;
+  position: relative;
+}
+.journey-list:before {
+  content: "";
+  position: absolute;
+  left: 25px;
+  top: 25px;
+  bottom: 25px;
+  border-left: 2px solid #8e9fbc;
+}
+.journey-list li {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  position: relative;
+  min-height: 60px;
+  margin-top: 10px;
+}
+.journey-list .icon-circle {
+  width: 51px;
+  height: 51px;
+}
+.journey-list li > div {
+  flex: 1;
+}
+.journey-list h3 {
+  font-size: 18px;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+}
+.journey-list p {
+  font-size: 14px;
+  margin-top: 3px;
+  line-height: 1.4;
+}
+.timeline-dot {
+  width: 21px;
+  height: 21px;
+  background: var(--surface);
+  border: 2px solid #7385ab;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin: 0 15px;
+}
+.badge {
+  display: inline-block;
+  padding: 6px 13px;
+  border-radius: 13px;
+  background: #d4edf9;
+  color: #0062bd;
+  font-size: 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.badge.warning {
+  background: #ffe2de;
+  color: #a2161a;
+}
+.badge.neutral {
+  background: #e9e9ed;
+  color: #37507e;
+}
+.ride-heading {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+.ride-heading > div {
+  flex: 1;
+}
+.ride-heading .icon-circle {
+  width: 55px;
+  height: 55px;
+}
+.ride-heading h2 {
+  margin: 0 0 7px;
+  font-size: 23px;
+}
+.ride-heading p {
+  font-size: 14px;
+  line-height: 1.6;
+}
+.info-strip {
+  display: flex;
+  gap: 10px;
+  background: #e0f1fc;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 15px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.info-strip > .icon {
+  color: #0062bd;
+  width: 23px;
+  height: 23px;
+}
+.info-strip small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.sample-note {
+  background: #fff8ebeb;
+  border-radius: 10px;
+  padding: 10px 16px;
+  width: fit-content;
+  max-width: 100%;
+  font-size: 12px;
+  text-align: center;
+  margin: 25px auto 0;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.trip-page > .cloud-bank {
+  height: 180px;
+  opacity: 0.9;
+}
+.trip-page > .cloud-bank img {
+  object-position: center 73%;
+}
+.planning-details {
+  margin: 0;
+}
+.planning-details > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid #e8e3d9;
+  padding: 14px 0;
+  font-size: 16px;
+}
+.planning-details dd {
+  margin: 0;
+  font-weight: 800;
+  text-align: right;
+}
+.muted {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 20px;
+}
+.planning-timeline li {
+  min-height: 65px;
+  margin-top: 12px;
+}
+.planning-view .status-card p {
+  font-size: 18px;
+}
+.planning-view .trip-hero h1 {
+  font-size: 57px;
+}
+.stale-notice {
+  position: relative;
+  z-index: 2;
+  background: #fff0ca;
+  border-bottom: 1px solid #e7d89c;
+  padding: 15px 24px;
+  text-align: center;
+  font-size: 14px;
+}
+.stale-notice button {
+  border: 0;
+  text-decoration: underline;
+  background: transparent;
+  font-weight: 900;
+  padding: 10px;
+}
+.trip-state {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+  text-align: center;
+  min-height: 550px;
+  margin: auto;
+  padding: 90px 24px;
+}
+.trip-state > .icon {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 25px;
+}
+.trip-state h1 {
+  font-size: 42px;
+  line-height: 1.1;
+}
+.trip-state p {
+  font-size: 18px;
+  margin: 20px 0;
+  line-height: 1.6;
+}
+.trip-state > .button {
+  display: flex;
+  margin: 0 auto 12px;
+  width: max-content;
+}
+.trip-state > .text-link {
+  margin: 10px auto 0;
+}
+.state-cloud {
+  position: absolute;
+  width: 130px;
+  left: -100px;
+  top: 100px;
+}
+.not-found {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 30px;
+  gap: 22px;
+}
+.not-found > .brand {
+  position: absolute;
+  top: 25px;
+  left: 40px;
+}
+.not-found > svg {
+  width: 150px;
+}
+.not-found h1 {
+  font-size: 44px;
+}
+.not-found p {
+  max-width: 480px;
+}
+@media (min-width: 1400px) {
+  .hero-inner {
+    padding-top: 88px;
+  }
+  .hero {
+    min-height: 715px;
+  }
+  .hero-visual {
+    min-height: 450px;
+  }
+}
+@media (max-width: 1100px) {
+  .hero-inner {
+    gap: 20px;
+    padding-top: 65px;
+  }
+  .hero h1 {
+    font-size: 73px;
+  }
+  .hero-copy > p {
+    font-size: 21px;
+  }
+  .hero-plane-trail {
+    left: -70px;
+    top: 0;
+    width: 220px;
+  }
+
+  .hero-actions {
+    gap: 16px;
+  }
+  .hero-actions .button {
+    min-width: 155px;
+    padding: 12px 20px;
+  }
+  .hero-actions .text-link {
+    font-size: 13px;
+  }
+  .scene {
+    gap: 100px;
+  }
+  .scene-visual .travel-drawing {
+    right: -30px;
+    max-width: 140px;
+  }
+  .scene-4 .scene-visual .travel-drawing {
+    right: -40px;
+    width: 155px;
+  }
+  .trip-container {
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+  .trip-hero {
+    gap: 20px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .status-card {
+    padding: 20px 17px;
+  }
+  .status-card h2 {
+    font-size: 29px;
+  }
+  .status-card p {
+    font-size: 18px;
+  }
+  .trip-grid {
+    gap: 18px;
+  }
+  .trip-panel {
+    padding: 17px;
+  }
+  .journey-list {
+    gap: 10px;
+  }
+  .journey-list h3 {
+    font-size: 16px;
+  }
+  .journey-list p {
+    font-size: 12px;
+  }
+  .badge {
+    font-size: 10px;
+    padding: 6px 10px;
+  }
+  .journey-list li {
+    gap: 10px;
+  }
+  .flight-detail-card {
+    padding: 16px 14px;
+  }
+  .flight-detail-card dt,
+  .flight-detail-card dd {
+    font-size: 12px;
+  }
+  .ride-heading {
+    gap: 10px;
+  }
+  .ride-heading p {
+    font-size: 12px;
+  }
+  .info-strip {
+    font-size: 12px;
+  }
+}
+@media (max-width: 800px) {
+  .nav-inner {
+    padding: 17px 24px;
+  }
+  .nav-inner nav {
+    gap: 22px;
+  }
+  .brand {
+    font-size: 28px;
+  }
+  .hero-inner {
+    padding: 55px 28px 160px;
+    gap: 10px;
+    grid-template-columns: 1fr 1fr;
+  }
+  .hero {
+    min-height: 625px;
+  }
+  .hero h1 {
+    font-size: 59px;
+  }
+  .hero-copy > p {
+    font-size: 18px;
+  }
+  .hero-actions {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+    margin-top: 20px;
+  }
+  .hero-helper {
+    margin-top: 6px;
+  }
+  .hero-visual {
+    min-height: 390px;
+    padding-left: 20px;
+  }
+  .hero-phone {
+    width: 275px;
+    flex-shrink: 0;
+  }
+  .hero-plane-trail {
+    top: 0;
+    left: -70px;
+    width: 175px;
+  }
+
+  .suitcase {
+    width: 75px;
+    height: 115px;
+    right: -12px;
+    bottom: 0;
+  }
+  .suitcase-handle {
+    left: 20px;
+    right: 20px;
+  }
+  .suitcase-body {
+    border-width: 3px;
+    padding-top: 9px;
+  }
+  .suitcase-body svg {
+    width: 36px;
+  }
+  .hero-cloud-bank {
+    height: 210px;
+  }
+  .walkthrough {
+    padding: 20px 28px 35px;
+  }
+  .story-heading h2 {
+    font-size: 37px;
+  }
+  .story-trail {
+    width: 64px;
+    opacity: 0.7;
+  }
+  .story-progress {
+    display: none;
+  }
+  .scene {
+    gap: 96px;
+    min-height: 270px;
+    margin: 20px 0 35px;
+  }
+  .scene-number {
+    width: 38px;
+    height: 38px;
+    font-size: 25px;
+  }
+  .scene-copy {
+    gap: 12px;
+  }
+  .scene-copy h3 {
+    font-size: 29px;
+  }
+  .scene-copy p {
+    font-size: 15px;
+  }
+  .scene-note {
+    font-size: 15px;
+  }
+  .scene-visual .travel-drawing {
+    display: none;
+  }
+  .scene-copy .travel-drawing {
+    width: 185px;
+  }
+  .scene-1 .route-illustration {
+    margin: -20px 0 -10px;
+    width: 270px;
+  }
+  .scene-1 .conversation {
+    width: 255px;
+  }
+  .scene-cloud {
+    width: 100px;
+    left: -25px;
+  }
+  .story-chat {
+    width: 260px;
+  }
+  .schedule-preview {
+    width: 260px;
+  }
+  .trip-preview {
+    width: 285px;
+    padding: 15px;
+  }
+  .faq-section {
+    padding: 30px 28px 45px;
+  }
+  .faq-cloud {
+    width: 80px;
+  }
+  .faq-cloud.left {
+    left: 12px;
+  }
+  .faq-cloud.right {
+    right: 12px;
+  }
+  .closing-plane {
+    right: 5%;
+    width: 65px;
+    top: 30px;
+  }
+  .closing .travel-drawing,
+.trip-page > .travel-drawing.home {
+    width: 190px;
+    right: -15px;
+  }
+  .closing-copy > p {
+    font-size: 15px;
+  }
+  .footer-inner {
+    padding: 20px 24px;
+    gap: 20px;
+  }
+  .footer nav {
+    gap: 15px;
+    font-size: 12px;
+  }
+  .footer p {
+    font-size: 10px;
+    max-width: 215px;
+  }
+  .trip-hero {
+    gap: 0;
+    grid-template-columns: 1.4fr 0.8fr;
+  }
+  .trip-hero h1 {
+    font-size: 48px;
+  }
+  .trip-subtitle {
+    font-size: 18px;
+  }
+  .trip-hero .route-plane {
+    width: 100px;
+    left: 38%;
+    top: -20px;
+  }
+  .trip-hero .route-illustration {
+    transform: scale(0.9);
+    min-width: 220px;
+  }
+  .trip-hero .route-cloud.two {
+    width: 160px;
+    top: -15px;
+  }
+  .status-card h2 {
+    font-size: 27px;
+  }
+  .status-card .icon-circle {
+    width: 47px;
+    height: 47px;
+  }
+  .status-card .icon-circle .icon {
+    width: 30px;
+    height: 30px;
+  }
+  .status-card p {
+    font-size: 16px;
+  }
+  .trip-grid {
+    grid-template-columns: 1fr;
+    max-width: 610px;
+    margin: auto;
+  }
+  .trip-panel {
+    padding: 22px;
+  }
+  .flight-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .flight-panel > h2 {
+    grid-column: 1/-1;
+    margin-bottom: 0;
+  }
+  .desktop-return {
+    margin: 0;
+  }
+  .flight-detail-card .flight-route strong {
+    font-size: 25px;
+  }
+  .flight-detail-card h3 {
+    font-size: 15px;
+  }
+  .flight-detail-card dt,
+  .flight-detail-card dd {
+    font-size: 11px;
+  }
+  .journey-list h3 {
+    font-size: 18px;
+  }
+  .journey-list p {
+    font-size: 14px;
+  }
+  .badge {
+    font-size: 12px;
+  }
+  .ride-heading p {
+    font-size: 14px;
+  }
+  .info-strip {
+    font-size: 14px;
+  }
+  .planning-view .trip-hero h1 {
+    font-size: 47px;
+  }
+}
+@media (max-width: 640px) {
+  .nav-inner {
+    padding: 13px 20px;
+  }
+  .nav-inner .brand {
+    font-size: 27px;
+    gap: 5px;
+  }
+  .nav-inner .brand svg {
+    width: 35px;
+    height: 32px;
+  }
+  .nav-inner nav {
+    gap: 0;
+  }
+  .nav-inner nav > a {
+    display: none;
+  }
+  .nav-cta {
+    font-size: 13px;
+    min-height: 42px;
+    padding: 9px 16px;
+    border-radius: 12px;
+  }
+  .hero {
+    min-height: unset;
+  }
+  .hero-inner {
+    padding: 42px 22px 145px;
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+  }
+  .hero-copy {
+    align-self: stretch;
+  }
+  .hero h1 {
+    font-size: clamp(54px, 12vw, 73px);
+    margin-bottom: 17px;
+    line-height: 1;
+  }
+  .hero-copy > p {
+    font-size: 19px;
+    line-height: 1.45;
+  }
+  .hero-actions {
+    flex-direction: row;
+    align-items: center;
+    gap: 18px;
+    margin-top: 20px;
+  }
+  .hero-actions .button {
+    font-size: 15px;
+    min-width: 145px;
+    min-height: 47px;
+  }
+  .hero-actions .text-link {
+    font-size: 12px;
+    gap: 6px;
+  }
+  .hero-actions .text-link .icon {
+    width: 16px;
+  }
+  .hero-helper {
+    font-size: 11px;
+    margin-top: 11px;
+  }
+  .hero-visual {
+    min-height: 410px;
+    max-width: 380px;
+    width: 100%;
+    margin: auto;
+    padding-left: 0;
+    padding-right: 12px;
+  }
+  .hero-phone {
+    width: 285px;
+    transform: rotate(2deg);
+  }
+  .hero-plane-trail {
+    top: -31px;
+    left: -3px;
+    width: 200px;
+    z-index: 5;
+  }
+
+
+  .hero-cloud.left {
+    left: -44px;
+    top: 320px;
+    width: 130px;
+  }
+  .hero-cloud.right {
+    width: 96px;
+    right: -10px;
+    top: 3px;
+  }
+  .hero-cloud-bank {
+    height: 190px;
+  }
+  .hero-cloud-bank img {
+    object-position: center 71%;
+  }
+  .suitcase {
+    right: 0;
+    bottom: 5px;
+    width: 85px;
+    height: 120px;
+  }
+  .walkthrough {
+    padding: 12px 22px 20px;
+  }
+  .story-heading {
+    padding-bottom: 24px;
+  }
+  .story-heading > p {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+  .story-heading h2 {
+    font-size: 34px;
+    max-width: 330px;
+    margin: auto;
+  }
+  .story-heading .text-link {
+    font-size: 13px;
+    margin-top: 7px;
+  }
+  .story-trail {
+    display: none;
+  }
+  .scene,
+  .scene:nth-of-type(even) {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+    margin: 17px 0 52px;
+    min-height: 0;
+  }
+  .scene-copy {
+    gap: 13px;
+    position: relative;
+  }
+  .scene-number {
+    width: 39px;
+    height: 39px;
+    font-size: 26px;
+    margin-top: 0;
+  }
+  .scene-copy h3 {
+    font-size: 30px;
+  }
+  .scene-copy p {
+    font-size: 16px;
+    max-width: 310px;
+    margin-top: 11px;
+  }
+  .scene-note {
+    font-size: 15px;
+    margin-top: 12px;
+  }
+  .scene-visual {
+    min-height: 0;
+    margin: 0 0 0 25px;
+  }
+  .scene-1 .scene-visual {
+    gap: 12px;
+  }
+  .scene-1 .conversation {
+    width: 280px;
+  }
+  .scene-1 .route-illustration {
+    margin: -20px 0 -15px 30px;
+    width: 275px;
+  }
+  .scene-1 .route-illustration > .route-schematic {
+    height: 135px;
+  }
+  .scene-copy .travel-drawing {
+    display: none;
+  }
+  .scene-visual .travel-drawing {
+    display: block;
+    position: relative;
+    max-width: 110px;
+    right: auto;
+    bottom: auto;
+    align-self: flex-end;
+    margin-left: -24px;
+    margin-right: -7px;
+  }
+  .scene-4 .scene-visual .travel-drawing {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: 110px;
+    flex-shrink: 0;
+    margin-left: -20px;
+  }
+  .scene-3 .scene-visual {
+    margin-left: 0;
+  }
+  .scene-3 .story-chat {
+    width: 270px;
+    flex-shrink: 0;
+  }
+  .scene-4 .scene-visual {
+    margin-left: 0;
+  }
+  .scene-4 .story-chat {
+    width: 255px;
+    flex-shrink: 0;
+  }
+  .story-chat .bubble {
+    font-size: 13px;
+  }
+  .schedule-preview {
+    width: 283px;
+    margin: 0 auto;
+  }
+  .scene-cloud {
+    width: 80px;
+    left: auto;
+    right: -22px;
+    top: 60px;
+    bottom: auto;
+    opacity: 0.75;
+  }
+  .scene-3 .scene-cloud {
+    display: none;
+  }
+  .scene-5 .scene-visual {
+    margin: 0;
+  }
+  .trip-preview {
+    width: 306px;
+  }
+  .family-drawing {
+    display: none;
+  }
+  .faq-section {
+    padding: 0 22px 45px;
+  }
+  .faq-section h2 {
+    font-size: 32px;
+    max-width: 280px;
+    margin: 0 auto 22px;
+  }
+  .faq-cloud {
+    display: none;
+  }
+  .faq-row button {
+    padding: 13px 17px;
+    font-size: 14px;
+    min-height: 56px;
+  }
+  .faq-row > div > p {
+    padding: 15px 17px;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+  .closing {
+    padding-top: 18px;
+    min-height: 400px;
+    align-items: flex-start;
+  }
+  .closing h2 {
+    font-size: 33px;
+    max-width: 310px;
+    margin: auto;
+  }
+  .closing-copy > p {
+    font-size: 15px;
+    max-width: 270px;
+    line-height: 1.5;
+    margin: 13px auto 18px;
+  }
+  .closing-copy > span {
+    font-size: 11px;
+    max-width: 240px;
+    margin: 12px auto;
+  }
+  .closing-plane {
+    right: 14px;
+    top: 220px;
+    width: 73px;
+  }
+  .closing .travel-drawing,
+.trip-page > .travel-drawing.home {
+    width: 170px;
+    right: 0;
+    bottom: 0;
+  }
+  .closing .cloud-bank {
+    height: 155px;
+  }
+  .footer-inner {
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    padding: 19px 22px;
+  }
+  .footer .brand {
+    font-size: 24px;
+  }
+  .footer nav {
+    margin-left: auto;
+    gap: 16px;
+  }
+  .footer nav a {
+    font-size: 11px;
+  }
+  .footer p {
+    width: 100%;
+    max-width: 100%;
+    font-size: 10px;
+    margin-top: 4px;
+  }
+  .setup-content h1 {
+    font-size: 42px;
+  }
+  .setup-content {
+    margin-top: 43px;
+  }
+  .setup-page {
+    padding-bottom: 145px;
+  }
+  .setup-content > .button {
+    font-size: 17px;
+  }
+  .setup-dialog h2 {
+    font-size: 38px;
+  }
+  .setup-dialog-inner {
+    padding: 32px 24px;
+  }
+  .demo-banner {
+    font-size: 12px;
+    padding: 8px 14px;
+  }
+  .trip-page {
+    padding-bottom: 95px;
+  }
+  .trip-container {
+    padding: 22px 16px 0;
+  }
+  .sample-label {
+    font-size: 10px;
+    text-align: left;
+    margin-bottom: 12px;
+  }
+  .trip-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 4px 10px;
+  }
+  .trip-hero > div:first-child {
+    width: 100%;
+  }
+  .trip-hero h1 {
+    font-size: 38px;
+    letter-spacing: -0.045em;
+  }
+  .trip-subtitle {
+    font-size: 16px;
+    margin-top: 7px;
+  }
+  .status-card {
+    padding: 15px 12px;
+    gap: 12px;
+    margin-top: 16px;
+    border-radius: 17px;
+  }
+  .status-card h2 {
+    font-size: 23px;
+    margin-bottom: 5px;
+  }
+  .status-card .icon-circle {
+    width: 42px;
+    height: 42px;
+  }
+  .status-card .icon-circle .icon {
+    width: 28px;
+    height: 28px;
+  }
+  .status-card p {
+    font-size: 15px;
+  }
+  .status-card small {
+    font-size: 10px;
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+  .trip-hero .route-illustration {
+    margin: 15px auto 0;
+    width: 100%;
+    max-width: 345px;
+    transform: none;
+    min-height: 100px;
+  }
+  .trip-hero .route-illustration > .route-schematic {
+    height: 115px;
+  }
+  .trip-hero .route-plane {
+    width: 80px;
+    top: -7px;
+    left: 45%;
+  }
+  .trip-hero .route-cloud.one {
+    width: 135px;
+    bottom: 12px;
+    left: -20px;
+  }
+  .trip-hero .route-cloud.two {
+    width: 105px;
+    right: -15px;
+    top: 0;
+  }
+  .trip-grid {
+    gap: 15px;
+  }
+  .trip-panel {
+    padding: 16px;
+    border-radius: 17px;
+  }
+  .trip-panel h2 {
+    font-size: 22px;
+    margin-bottom: 13px;
+  }
+  .flight-panel {
+    display: block;
+  }
+  .flight-detail-card {
+    padding: 14px 13px;
+    border-radius: 12px;
+  }
+  .flight-detail-card h3 {
+    font-size: 16px;
+  }
+  .flight-detail-card .flight-route {
+    margin: 10px 0 8px;
+  }
+  .flight-detail-card .flight-route strong {
+    font-size: 29px;
+  }
+  .flight-detail-card p {
+    font-size: 12px;
+  }
+  .flight-detail-card dt,
+  .flight-detail-card dd {
+    font-size: 12px;
+  }
+  .flight-detail-card dl > div {
+    gap: 8px;
+  }
+  .desktop-return {
+    display: none;
+  }
+  .mobile-return {
+    display: block;
+  }
+  .mobile-return .flight-detail-card {
+    border: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+  .journey-column {
+    gap: 15px;
+  }
+  .journey-list li {
+    gap: 10px;
+    min-height: 57px;
+    margin-top: 5px;
+  }
+  .journey-list .icon-circle {
+    width: 38px;
+    height: 38px;
+  }
+  .journey-list .icon-circle .icon {
+    width: 23px;
+    height: 23px;
+  }
+  .journey-list:before {
+    left: 18px;
+  }
+  .timeline-dot {
+    width: 17px;
+    height: 17px;
+    margin: 0 10px;
+  }
+  .journey-list h3 {
+    font-size: 15px;
+  }
+  .journey-list p {
+    font-size: 11px;
+    line-height: 1.5;
+    margin-top: 2px;
+  }
+  .badge {
+    font-size: 9px;
+    padding: 5px 8px;
+    max-width: 100px;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.3;
+    border-radius: 11px;
+  }
+  .journey-list li > div {
+    min-width: 0;
+  }
+  .ride-heading {
+    gap: 10px;
+  }
+  .ride-heading .icon-circle {
+    width: 42px;
+    height: 42px;
+  }
+  .ride-heading h2 {
+    font-size: 18px;
+    margin-bottom: 3px;
+  }
+  .ride-heading p {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .info-strip {
+    font-size: 12px;
+    gap: 8px;
+    padding: 10px;
+  }
+  .info-strip small {
+    font-size: 10px;
+  }
+  .info-strip > .icon {
+    width: 20px;
+    height: 20px;
+  }
+  .sample-note {
+    font-size: 11px;
+    margin-top: 18px;
+    padding: 0 4px;
+  }
+  .trip-page > .cloud-bank {
+    height: 95px;
+  }
+  .planning-view .trip-hero h1 {
+    font-size: 38px;
+  }
+  .planning-view .status-card p {
+    font-size: 15px;
+  }
+  .planning-details > div {
+    font-size: 14px;
+    gap: 15px;
+    padding: 12px 0;
+  }
+  .planning-timeline li {
+    min-height: 65px;
+  }
+  .planning-timeline h3 {
+    font-size: 16px;
+  }
+  .planning-timeline p {
+    font-size: 12px;
+  }
+  .trip-state {
+    padding: 65px 22px;
+    min-height: 500px;
+  }
+  .trip-state h1 {
+    font-size: 33px;
+  }
+  .trip-state p {
+    font-size: 16px;
+  }
+  .state-cloud {
+    left: -30px;
+    top: 15px;
+    width: 95px;
+  }
+  .stale-notice {
+    padding: 12px 18px;
+    font-size: 12px;
+  }
+  .not-found h1 {
+    font-size: 36px;
+  }
+  .not-found p {
+    font-size: 16px;
+  }
+}
+@media (max-width: 370px) {
+  .hero-actions {
+    gap: 12px;
+  }
+  .hero-actions .button {
+    min-width: 134px;
+    padding: 10px 17px;
+  }
+  .hero-actions .text-link {
+    font-size: 11px;
+  }
+  .scene-3 .story-chat {
+    width: 246px;
+  }
+  .scene-4 .story-chat {
+    width: 235px;
+  }
+  .scene-visual .travel-drawing {
+    max-width: 90px;
+  }
+  .scene-4 .scene-visual .travel-drawing {
+    width: 90px;
+  }
+  .scene-copy h3 {
+    font-size: 27px;
+  }
+  .footer nav {
+    gap: 11px;
+  }
+  .trip-hero h1 {
+    font-size: 34px;
+  }
+  .journey-list h3 {
+    font-size: 14px;
+  }
+  .journey-list p {
+    font-size: 10px;
+  }
+  .badge {
+    font-size: 8px;
+    padding: 5px 7px;
+  }
+  .journey-list li {
+    gap: 7px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *:before,
+  *:after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .hero-phone,
+  .schedule-preview,
+  .story-chat {
+    transform: none;
+  }
+  .story-progress {
+    display: none;
+  }
+  .story-trail {
+    opacity: 0.45;
+  }
+}
+
+/* Keep the original cloud artwork, with a soft scalloped paper edge. */
+.hero-cloud-bank {
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 260' preserveAspectRatio='none'%3E%3Cpath fill='white' d='M0 0H1200V220C1140 207 1110 242 1050 228S955 244 900 234S810 248 750 239S650 253 600 242S500 248 450 237S360 248 300 234S220 243 150 225S60 240 0 220Z'/%3E%3C/svg%3E");
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+}
+@media (max-width: 640px) {
+  .hero-plane-trail {
+    top: 0;
+  }
+
+  .scene-cloud {
+    display: none;
+  }
+}
+
+.phone-avatar { padding: 0; overflow: hidden; }
+.phone-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.contact-preview > img { border-radius: 50%; }
+.footer-setup { background: none; border: 0; padding: 0; font: inherit; color: inherit; }
+.trip-plane-art { position: relative; width: 100%; max-width: 420px; height: 250px; }
+.trip-plane-trail { position: absolute; inset: 0; width: 100%; height: 100%; }
+.trip-plane-art > .plane { position: absolute; width: 138px; right: 5%; top: 4%; transform: rotate(-8deg); }
+.trip-plane-cloud { position: absolute; width: 200px; left: 0; bottom: 0; }
+.closing-copy { padding-bottom: 55px; }
+.closing .cloud-bank { height: 130px; }
+.scene-4 .scene-visual { margin-left: 0; }
+@media (max-width: 640px) {
+  .footer-setup { font-size: 11px; }
+  .scene-2 .story-chat, .scene-3 .story-chat { width: min(100%, 290px); }
+  .scene-3 .scene-visual .travel-drawing { display: none; }
+  .scene-4 .scene-visual { margin: 0; }
+  .closing { padding-top: 0; min-height: 440px; }
+  .closing-copy { padding-bottom: 100px; }
+  .closing .cloud-bank { height: 120px; }
+  .trip-plane-art { max-width: 345px; height: 170px; margin: 0 auto; }
+  .trip-plane-art > .plane { width: 100px; }
+  .trip-plane-cloud { width: 140px; }
+}
+
+/* One scroll controller owns message visibility; reserve the full chat layout. */
+.scroll-message-sequence .bubble {
+  opacity: var(--message-reveal, 0);
+  transform: translateY(calc((1 - var(--message-reveal, 0)) * 18px))
+    scale(calc(0.96 + var(--message-reveal, 0) * 0.04));
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-message-sequence .bubble {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Keep the flight path in its own gutter between the two story columns. */
+.scene-copy > div { min-width: 0; }
+.scene-copy, .scene-visual { min-width: 0; }
+
+.story-trail { overflow: visible; }
+
+@media (min-width: 641px) and (max-width: 1000px) {
+  .faq-cloud { width: 80px; top: 24px; }
+  .faq-cloud.right { top: 24px; }
+  .faq-section h2 {
+    max-width: calc(100% - 176px);
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* iPhone Messages screens share the same device and native-style chrome. */
+.iphone-chat, .scene .iphone-chat {
+  width: 292px;
+  flex-shrink: 0;
+  padding: 7px;
+  border: 2px solid #53555a;
+  border-radius: 43px;
+  background: #17181b;
+  box-shadow: 0 16px 36px #052d681c, inset 0 0 0 1px #96989d;
+  color: #111;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  font-weight: 400;
+}
+.iphone-chat.hero-phone { width: 312px; }
+.iphone-screen {
+  min-height: 564px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 34px;
+  overflow: hidden;
+  background: #fff;
+  position: relative;
+}
+.iphone-status {
+  height: 43px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 20px 0;
+  position: relative;
+  font-size: 13px;
+  font-weight: 600;
+}
+.dynamic-island {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 78px;
+  height: 23px;
+  border-radius: 20px;
+  background: #101114;
+}
+.iphone-status-icons { width: 53px; height: 16px; }
+.iphone-contact-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 12px 10px;
+  border-bottom: 1px solid #e7e7eb;
+  background: #fafafa;
+}
+.iphone-back { width: 17px; height: 25px; color: #007aff; }
+.iphone-video { width: 25px; height: 25px; color: #007aff; }
+.iphone-contact { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.iphone-contact img { width: 42px; height: 42px; border-radius: 50%; }
+.iphone-contact > span { font-size: 12px; }
+.iphone-contact > span > span { color: #8e8e93; margin-left: 2px; }
+.iphone-chat-date { font-size: 10px; line-height: 1.5; color: #8e8e93; text-align: center; margin-top: 12px; }
+.iphone-chat-date strong { font-weight: 600; }
+.iphone-chat .conversation-body {
+  flex: 1;
+  padding: 14px 13px 20px;
+  gap: 10px;
+}
+.iphone-chat .bubble {
+  max-width: 89%;
+  padding: 6px 11px;
+  font-size: 14px;
+  line-height: 1.32;
+  border-radius: 18px;
+  letter-spacing: -0.2px;
+}
+.iphone-chat .bubble-text { position: relative; z-index: 1; }
+.iphone-chat .sent { background: #007aff; color: #fff; }
+.iphone-chat .received { background: #e9e9eb; color: #111; }
+/* Two rounded shapes create the curved iMessage tail without a sharp wedge. */
+.iphone-chat .bubble::before,
+.iphone-chat .bubble::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  height: 20px;
+  pointer-events: none;
+}
+.iphone-chat .bubble::before { width: 20px; background: inherit; }
+.iphone-chat .bubble::after { width: 26px; background: #fff; }
+.iphone-chat .sent::before { right: -7px; border-bottom-left-radius: 16px; }
+.iphone-chat .sent::after { right: -26px; border-bottom-left-radius: 10px; }
+.iphone-chat .received::before { left: -7px; border-bottom-right-radius: 16px; }
+.iphone-chat .received::after { left: -26px; border-bottom-right-radius: 10px; }
+.iphone-composer { display: flex; align-items: center; gap: 9px; padding: 0 10px 16px; }
+.iphone-add { width: 29px; height: 29px; background: #f0f0f2; color: #777; border-radius: 50%; text-align: center; font-size: 26px; line-height: 27px; }
+.iphone-composer > div { flex: 1; display: flex; align-items: center; justify-content: space-between; border: 1px solid #d1d1d6; border-radius: 20px; padding: 3px 4px 3px 11px; font-size: 13px; color: #8e8e93; }
+.iphone-send { border-radius: 50%; background: #007aff; color: #fff; font-size: 21px; line-height: 25px; width: 25px; text-align: center; }
+.iphone-home-indicator { width: 96px; height: 4px; background: #111; border-radius: 5px; margin: 0 auto 9px; }
+.hero-visual:has(.iphone-chat) { min-height: 500px; }
+@media (max-width: 800px) {
+  .scene .iphone-chat { width: 272px; }
+  .iphone-chat.hero-phone { width: 285px; }
+}
+@media (max-width: 640px) {
+  .scene .iphone-chat { width: min(292px, 100%); }
+  .scene .scene-visual:has(.iphone-chat) { margin-left: 0; justify-content: center; }
+  .hero-visual:has(.iphone-chat) { min-height: 490px; }
+}
+
+/* Scale the complete hero device, including its layout footprint. */
+/* Offset the device into the space between the plane and suitcase. */
+.hero-phone-wrap { position: relative; width: 256px; height: 480px; flex-shrink: 0; transform: translateX(32px); }
+@media (max-width: 800px) {
+  .hero-phone-wrap { transform: translateX(12px); }
+}
+.hero-phone-wrap .iphone-chat.hero-phone {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 312px;
+  transform: translateX(-50%) rotate(3deg) scale(0.82);
+  transform-origin: top center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-phone-wrap .iphone-chat.hero-phone { transform: translateX(-50%) scale(0.82); }
+}
+
+/* The trip itinerary shares the landing page’s paper, sky, and illustration style. */
+.boarding-view { max-width: 1180px; padding-top: 36px; padding-bottom: 60px; }
+.boarding-header { display: flex; align-items: center; justify-content: space-between; gap: 32px; margin-bottom: 30px; }
+.boarding-header h1 { font-size: clamp(38px, 4.7vw, 60px); line-height: 1.08; letter-spacing: -0.045em; }
+.boarding-header p { font-size: 18px; margin-top: 12px; color: #4b607e; }
+.boarding-layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); column-gap: 38px; row-gap: 24px; align-items: stretch; }
+.boarding-flight-column { grid-column: 1; grid-row: 1 / span 2; min-width: 0; display: flex; flex-direction: column; }
+.boarding-flight-column > .boarding-ticket { flex: 1; display: flex; flex-direction: column; }
+.boarding-flight-column > .boarding-ticket > .boarding-ticket-body { flex: 1; }
+.boarding-afternoon { grid-column: 2; grid-row: 1; padding-top: 3px; }
+.boarding-ride { grid-column: 2; grid-row: 1; }
+.boarding-return { grid-column: 2; grid-row: 2; }
+.boarding-secondary-column { grid-column: 2; grid-row: 1 / span 2; display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.boarding-notice { display: flex; align-items: center; gap: 14px; padding: 17px 20px; border-radius: 16px; background: #eaf4fc; margin-bottom: 18px; }
+.boarding-notice.delayed { background: #fff0e9; color: #853b36; }
+.boarding-notice > .icon { width: 25px; height: 25px; flex-shrink: 0; }
+.boarding-notice h2 { font-size: 17px; font-weight: 800; line-height: 1.4; }
+.boarding-notice p { font-size: 15px; margin-top: 2px; line-height: 1.5; }
+.boarding-ticket { background: #fffdfa; border: 1px solid #e2dfd6; border-radius: 24px; box-shadow: 0 12px 30px #052d6808; }
+.boarding-ticket-body { padding: 28px 30px 22px; }
+.boarding-ticket-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 32px; }
+.boarding-ticket-heading h2 { font-size: 16px; font-weight: 800; }
+.boarding-ticket-heading > span { font-size: 14px; color: #4b607e; }
+.boarding-route { display: grid; grid-template-columns: minmax(0, 1fr) minmax(50px, 100px) minmax(0, 1fr); gap: 12px; align-items: center; }
+.boarding-airport { display: flex; flex-direction: column; align-items: flex-start; }
+.boarding-airport.destination { align-items: flex-end; text-align: right; }
+.boarding-route-code { font-size: clamp(38px, 4.2vw, 54px); font-weight: 900; line-height: 1.1; letter-spacing: -0.03em; overflow-wrap: anywhere; }
+.boarding-airport > span { font-size: 13px; color: #4b607e; margin-top: 5px; }
+.boarding-airport time { font-size: 28px; font-weight: 900; white-space: nowrap; margin-top: 19px; }
+.boarding-airport s { font-size: 14px; color: #66738a; margin-top: 2px; }
+.boarding-route-trail { display: flex; align-items: center; gap: 8px; padding-bottom: 20px; }
+.boarding-route-trail > span { flex: 1; border-top: 2px dashed #9bccec; }
+.boarding-route-trail > svg { width: 29px; height: 26px; flex-shrink: 0; }
+.boarding-timezone { font-size: 12px; color: #66738a; margin-top: 22px; }
+.boarding-ticket-stub { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; padding: 22px 30px; border-top: 2px dashed #e2dfd6; margin: 0; position: relative; }
+.boarding-ticket-stub::before, .boarding-ticket-stub::after { content: ""; position: absolute; width: 18px; height: 18px; border-radius: 50%; top: -10px; background: var(--paper); border: 1px solid #e2dfd6; }
+.boarding-ticket-stub::before { left: -10px; border-left-color: transparent; border-bottom-color: transparent; transform: rotate(45deg); }
+.boarding-ticket-stub::after { right: -10px; border-right-color: transparent; border-top-color: transparent; transform: rotate(45deg); }
+.boarding-ticket-fields { display: flex; flex: 1; gap: 30px; margin: 0; justify-content: space-between; }
+.boarding-ticket-stub dt { font-size: 13px; color: #4b607e; }
+.boarding-ticket-stub dd { font-size: 16px; font-weight: 800; margin: 4px 0 0; }
+.boarding-stamp { border: 1px solid #badbef; color: #4b607e; border-radius: 50%; padding: 9px 14px; font-size: 13px; transform: rotate(-9deg); }
+.boarding-afternoon > h2 { font-size: 27px; letter-spacing: -0.035em; }
+.boarding-timeline { list-style: none; margin: 26px 0 0; padding: 0 0 0 22px; }
+.boarding-timeline li { border-left: 2px dashed #a5d2ee; position: relative; padding: 0 0 28px 25px; }
+.boarding-timeline li:last-child { border-color: transparent; padding-bottom: 0; }
+.boarding-timeline li::before { content: ""; position: absolute; width: 13px; height: 13px; border-radius: 50%; background: #a5d2ee; border: 3px solid var(--paper); top: 7px; left: -7.5px; }
+.boarding-timeline .current::before { background: var(--navy); box-shadow: 0 0 0 4px #bce0f6; }
+.boarding-timeline time { display: block; font-size: 28px; font-weight: 900; line-height: 1.2; margin-bottom: 5px; }
+.boarding-timeline h3 { font-size: 17px; font-weight: 800; }
+.boarding-timeline p { color: #4b607e; font-size: 14px; margin-top: 4px; line-height: 1.5; }
+.boarding-ride { padding: 22px 24px; background: #fffdfa; border: 1px solid #e2dfd6; border-radius: 21px; box-shadow: 0 8px 24px #052d6806; }
+.boarding-ride-heading { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.boarding-ride-heading .icon { width: 25px; height: 25px; }
+.boarding-ride-heading h2 { font-size: 20px; }
+.boarding-ride-heading > span { margin-left: auto; font-size: 12px; color: #4b607e; }
+.boarding-ride > p { font-size: 17px; }
+.boarding-secondary, .boarding-ride .boarding-secondary { font-size: 14px; line-height: 1.6; color: #4b607e; margin-top: 8px; }
+.boarding-return { border-top: 1px solid #deddd4; padding-top: 19px; }
+.boarding-return summary { font-size: 17px; font-weight: 800; padding: 5px 0; cursor: pointer; }
+/* The return ticket is secondary to today’s outbound flight. */
+.boarding-return.compact { border-top: 0; padding-top: 0; margin-top: auto; }
+.boarding-return.compact summary { font-size: 15px; line-height: 1.5; }
+.boarding-return.compact .boarding-ticket { border-radius: 19px; box-shadow: 0 6px 18px #052d6805; }
+.boarding-return.compact .boarding-ticket-body { padding: 20px 22px 16px; }
+.boarding-return.compact .boarding-ticket-heading { margin-bottom: 22px; }
+.boarding-return.compact .boarding-ticket-heading h2 { font-size: 14px; }
+.boarding-return.compact .boarding-ticket-heading > span { font-size: 12px; }
+.boarding-return.compact .boarding-route { grid-template-columns: minmax(0, 1fr) 48px minmax(0, 1fr); gap: 8px; }
+.boarding-return.compact .boarding-route-code { font-size: 34px; }
+.boarding-return.compact .boarding-airport > span { font-size: 12px; }
+.boarding-return.compact .boarding-airport time { font-size: 21px; margin-top: 14px; }
+.boarding-return.compact .boarding-timezone { font-size: 11px; margin-top: 18px; }
+.boarding-return.compact .boarding-ticket-stub { padding: 16px 22px; gap: 16px; }
+.boarding-return.compact .boarding-ticket-stub dd { font-size: 14px; }
+.boarding-return.compact .boarding-stamp { display: none; }
+@media (min-width: 641px) and (max-width: 800px) {
+  .boarding-return.compact .boarding-ticket-body { padding: 18px 15px 14px; }
+  .boarding-return.compact .boarding-ticket-stub { padding: 15px; }
+  .boarding-return.compact .boarding-route { grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr); gap: 6px; }
+  .boarding-return.compact .boarding-route-code { font-size: 29px; }
+  .boarding-return.compact .boarding-airport time { font-size: 18px; }
+}
+@media (max-width: 360px) {
+  .boarding-return.compact .boarding-ticket-body { padding: 18px 16px 14px; }
+  .boarding-return.compact .boarding-route { grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr); }
+  .boarding-return.compact .boarding-airport time { font-size: 19px; }
+}
+.boarding-return > .boarding-ticket { margin-top: 0; }
+.boarding-header.with-timeline { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 38px; align-items: center; margin-bottom: 36px; }
+.boarding-header-timeline { min-width: 0; }
+.boarding-header-timeline > h2 { font-size: 22px; letter-spacing: -0.025em; }
+.boarding-timeline.horizontal { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; padding: 0; margin-top: 22px; }
+.boarding-timeline.horizontal li { border: 0; padding: 25px 0 0; min-width: 0; }
+.boarding-timeline.horizontal li::before { left: 0; top: 0; z-index: 1; }
+.boarding-timeline.horizontal li:not(:last-child)::after { content: ""; position: absolute; top: 6px; left: 6px; right: -24px; border-top: 2px dashed #a5d2ee; }
+.boarding-timeline.horizontal time { font-size: 23px; white-space: nowrap; }
+.boarding-timeline.horizontal h3 { font-size: 16px; line-height: 1.3; }
+.boarding-header .boarding-timeline.horizontal p { font-size: 13px; margin-top: 5px; line-height: 1.4; }
+@media (max-width: 1000px) {
+  .boarding-header.with-timeline { grid-template-columns: 1fr; gap: 28px; }
+  .boarding-timeline.horizontal { max-width: 620px; }
+}
+@media (max-width: 640px) {
+  .boarding-header.with-timeline { gap: 25px; margin-bottom: 28px; }
+  .boarding-timeline.horizontal { gap: 16px; }
+  .boarding-timeline.horizontal li:not(:last-child)::after { right: -16px; }
+  .boarding-timeline.horizontal time { font-size: 19px; }
+  .boarding-timeline.horizontal h3 { font-size: 14px; }
+  .boarding-header .boarding-timeline.horizontal p { font-size: 12px; }
+}
+@media (max-width: 360px) {
+  .boarding-timeline.horizontal time { font-size: 17px; }
+}
+.boarding-updated { color: #4b607e; font-size: 13px; margin-top: 28px; }
+.boarding-confirmed { margin-top: 17px; }
+.boarding-planning .boarding-flight-column { grid-row: 1; }
+.boarding-planning .boarding-route-trail { padding-bottom: 0; }
+.boarding-timeline.planning .icon { width: 28px; height: 28px; margin-bottom: 12px; }
+@media (max-width: 800px) {
+  .boarding-view { padding-top: 25px; }
+  .boarding-layout { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); column-gap: 24px; }
+  .boarding-ticket-body { padding: 23px 20px 18px; }
+  .boarding-route { grid-template-columns: minmax(0, 1fr) 38px minmax(0, 1fr); gap: 8px; }
+  .boarding-airport time { font-size: 23px; }
+  .boarding-ticket-stub { padding: 20px; }
+  .boarding-stamp { display: none; }
+  .boarding-ride { padding: 20px; }
+  .boarding-timeline time { font-size: 25px; }
+}
+@media (max-width: 640px) {
+  .boarding-view { padding: 24px 20px 50px; }
+  .boarding-header { gap: 0; margin-bottom: 25px; }
+  .boarding-header h1 { font-size: 38px; }
+  .boarding-header p { font-size: 16px; line-height: 1.5; margin-top: 10px; }
+  .boarding-layout { display: flex; flex-direction: column; gap: 25px; }
+  .boarding-layout > * { width: 100%; }
+  .boarding-notice { padding: 15px 16px; }
+  .boarding-ticket-heading { margin-bottom: 27px; }
+  .boarding-route-code { font-size: 43px; }
+  .boarding-airport > span { font-size: 12px; }
+  .boarding-airport time { font-size: 25px; }
+  .boarding-ticket-stub { gap: 16px; }
+  .boarding-stamp { display: block; font-size: 12px; padding: 8px 11px; }
+  .boarding-afternoon { padding-top: 0; }
+  .boarding-timeline { margin-top: 23px; }
+  .boarding-timeline li { padding-bottom: 25px; }
+  .boarding-timeline time { font-size: 27px; }
+  .boarding-return summary { font-size: 16px; min-height: 44px; }
+}
+@media (max-width: 360px) {
+  .boarding-view { padding-left: 16px; padding-right: 16px; }
+  .boarding-header h1 { font-size: 34px; }
+  .boarding-ticket-body { padding: 22px 16px 18px; }
+  .boarding-route-code { font-size: 38px; }
+  .boarding-airport time { font-size: 22px; }
+  .boarding-stamp { display: none; }
+}
+
+.message-slot { position: relative; width: fit-content; max-width: 89%; }
+.message-slot.outgoing { align-self: flex-end; max-width: 78%; }
+.iphone-chat .message-slot .bubble { max-width: 100%; }
+.typing-bubble {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 59px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 18px;
+  background: #e9e9eb;
+  opacity: var(--typing-reveal, 0);
+  visibility: hidden;
+}
+.scroll-message-sequence .typing-bubble { visibility: visible; }
+.typing-bubble::before,
+.typing-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  height: 20px;
+  pointer-events: none;
+}
+.typing-bubble::before {
+  left: -7px;
+  width: 20px;
+  border-bottom-right-radius: 16px;
+  background: #e9e9eb;
+}
+.typing-bubble::after {
+  left: -26px;
+  width: 26px;
+  border-bottom-right-radius: 10px;
+  background: #fff;
+}
+.typing-bubble span {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #8e8e93;
+  animation: imessage-typing 1.1s ease-in-out infinite;
+  animation-play-state: var(--typing-play-state, paused);
+}
+.typing-bubble span:nth-child(2) { animation-delay: 0.15s; }
+.typing-bubble span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes imessage-typing {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.55; }
+  30% { transform: translateY(-3px); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-message-sequence .typing-bubble { display: none; }
+}
+@media (min-width: 1101px) {
+  .walkthrough { overflow: visible; }
+  .scene-3 .scene-visual .travel-drawing {
+    left: calc(50% + 170px);
+    right: auto;
+    width: clamp(80px, calc((100vw - 1120px) / 2 + 70px), 140px);
+  }
+}
+@media (min-width: 801px) and (max-width: 1100px) {
+  .scene-3 .scene-visual .travel-drawing {
+    right: 0;
+    bottom: -110px;
+    width: 130px;
+  }
+  .scene-3 { margin-bottom: 125px; }
+}
+
+/* One compact QR-only setup popup, shared by every setup trigger. */
+.setup-dialog { max-height: calc(100dvh - 24px); overflow: hidden; }
+.setup-dialog-inner { padding: 28px 32px 30px; }
+.dialog-brand { display: flex; justify-content: center; margin-bottom: 20px; }
+.dialog-brand .brand { font-size: 32px; }
+.dialog-brand .brand svg { width: 39px; }
+.setup-dialog h2 { margin: 0 0 12px; font-size: clamp(30px, 5.5dvh, 46px); }
+.setup-dialog .qr-frame { width: clamp(132px, 30dvh, 218px); min-height: 0; aspect-ratio: 1; padding: 12px; margin: 18px auto; }
+.setup-dialog .qr-frame img { width: 100%; height: auto; aspect-ratio: 1; }
+.setup-dialog .dialog-cloud { bottom: 24px; width: 90px; }
+.setup-dialog .dialog-access { max-width: 280px; margin: auto; }
+@media (max-width: 640px) {
+  .setup-dialog-inner { padding: 24px 20px; }
+  .dialog-brand { margin-bottom: 18px; }
+  .setup-dialog-inner > p:not(.contact-name):not(.dialog-access) { font-size: 17px; }
+}
+@media (max-height: 560px) {
+  .setup-dialog-inner { padding: 14px 20px 18px; }
+  .dialog-brand { margin-bottom: 12px; }
+  .dialog-brand .brand { font-size: 26px; }
+  .dialog-brand .brand svg { width: 30px; }
+  .setup-dialog h2 { font-size: 30px; margin-bottom: 10px; }
+  .setup-dialog-inner > p:not(.contact-name):not(.dialog-access) { font-size: 16px; }
+  .setup-dialog .qr-frame { width: clamp(112px, 28dvh, 154px); margin: 12px auto; padding: 8px; }
+}
+@media (max-height: 430px) and (min-width: 560px) {
+  .setup-dialog { width: 650px; }
+  .setup-dialog-inner { display: grid; grid-template-columns: 1fr 170px; column-gap: 24px; align-items: center; text-align: left; }
+  .dialog-brand { grid-column: 1; justify-content: flex-start; margin-bottom: 10px; }
+  .setup-dialog h2 { grid-column: 1; }
+  .setup-dialog-inner > p { grid-column: 1; }
+  .setup-dialog .qr-frame { grid-column: 2; grid-row: 1 / span 3; width: 154px; margin: 18px 0; }
+  .setup-dialog .dialog-access { grid-column: 1 / -1; max-width: none; margin-top: 8px; }
+  .setup-dialog .dialog-cloud { display: none; }
+}
+
+@media (max-width: 400px) {
+  .setup-dialog .dialog-cloud { display: none; }
+}
+
+/* Handheld layouts keep artwork inside the paper and conversations in view. */
+.mobile-scene-art { display: none; }
+html { -webkit-text-size-adjust: 100%; }
+.faq-row p { overflow-wrap: anywhere; }
+body:has(dialog[open]) { overflow: hidden; }
+@media (min-width: 901px) and (max-width: 1100px) {
+  .scene-copy .travel-drawing.ticket { transform: translate(35px, 40px); }
+}
+@media (max-width: 900px) {
+  .hero-inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .hero-copy, .hero-visual { min-width: 0; }
+  .hero h1 { font-size: clamp(44px, 6.6vw, 59px); }
+  .walkthrough { overflow: visible; padding-left: 24px; padding-right: 24px; }
+  .scene, .scene:nth-of-type(even) {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+    margin: 32px auto 64px;
+    max-width: 520px;
+  }
+  .scene-copy { position: relative; gap: 13px; }
+  .scene-copy > div { flex: 1; }
+  .scene-copy p { max-width: 400px; }
+  .scene-visual, .scene .scene-visual:has(.iphone-chat) { margin-left: 0; margin-right: 0; }
+  .scene .iphone-chat { width: min(280px, 100%); transform: none; }
+  .scene .iphone-screen { min-height: 530px; }
+  .story-trail, .scene-cloud { display: none; }
+  .scene-copy .travel-drawing.ticket {
+    display: block;
+    width: 180px;
+    margin: 16px 0 0 auto;
+    transform: none;
+  }
+  .mobile-scene-art { display: block; }
+  .mobile-scene-art .travel-drawing {
+    display: block;
+    width: 130px;
+    margin: 12px 0 0 auto;
+    transform: none;
+  }
+  .scene-3 .scene-visual .travel-drawing { display: none; }
+  .trip-preview { width: min(100%, 360px); }
+  .trip-preview li > div { min-width: 0; }
+  .footer-inner { flex-wrap: wrap; }
+  .footer nav a, .footer-setup { display: inline-flex; align-items: center; min-height: 44px; }
+  .boarding-layout { display: flex; flex-direction: column; gap: 24px; }
+  .boarding-layout > * { width: 100%; }
+  .boarding-secondary-column { gap: 24px; }
+  .boarding-header.with-timeline { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 900px) and (prefers-reduced-motion: no-preference) {
+  .scene:has(.iphone-chat) {
+    display: block;
+    min-height: calc(1100px + 35svh);
+  }
+  .scene:has(.iphone-chat) .scene-visual {
+    position: sticky;
+    top: 16px;
+    margin-top: 24px;
+    padding-bottom: 16px;
+  }
+}
+@media (max-width: 640px) {
+  .nav-inner {
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+  }
+  .nav-cta { min-height: 44px; font-size: 14px; }
+  .hero-inner { padding: 32px 22px 100px; gap: 28px; }
+  .hero h1 { font-size: clamp(46px, 13.5vw, 64px); }
+  .hero-copy > p { font-size: 18px; }
+  .hero-actions { flex-wrap: wrap; gap: 8px 16px; }
+  .hero-actions .text-link { font-size: 13px; }
+  .hero-visual:has(.iphone-chat) { min-height: 600px; padding: 96px 0 24px; }
+  .hero-phone-wrap { transform: none; }
+  .hero-plane-trail { width: 145px; left: 8px; top: 0; }
+  .hero-cloud.left { width: 80px; left: 12px; top: 365px; }
+  .hero-cloud.right { width: 80px; right: 12px; top: 0; }
+  .suitcase { width: 62px; height: 96px; right: 0; bottom: 18px; }
+  .suitcase-handle { left: 18px; right: 18px; height: 34px; }
+  .suitcase-body { border-radius: 15px; }
+  .suitcase-body span { width: 19px; }
+  .walkthrough { padding-left: 20px; padding-right: 20px; }
+  .story-heading h2 { font-size: 32px; }
+  .scene-copy h3 { font-size: clamp(26px, 7.5vw, 32px); }
+  .scene-number { width: 36px; height: 36px; font-size: 24px; }
+  .scene-copy p { font-size: 16px; }
+  .scene-note { font-size: 15px; }
+  .scene .iphone-chat .bubble { font-size: 14px; }
+  .trip-preview p { font-size: 13px; }
+  .trip-preview .button { min-height: 48px; }
+  .faq-section { padding: 52px 20px 40px; }
+  .faq-section h2 { max-width: 270px; }
+  .faq-cloud { display: block; width: 55px; top: 0; }
+  .faq-cloud.left { left: 16px; }
+  .faq-cloud.right { right: 16px; top: 12px; }
+  .faq-row button { font-size: 16px; min-height: 60px; }
+  .faq-row > div > p { font-size: 15px; }
+  .closing { min-height: 440px; }
+  .closing-copy { padding: 0 20px 180px; }
+  .closing-copy > span { font-size: 13px; }
+  .closing-plane { top: auto; bottom: 115px; left: 24px; right: auto; width: 60px; }
+  .closing .travel-drawing, .trip-page > .travel-drawing.home { width: 150px; right: 12px; bottom: 0; }
+  .trip-page { padding-bottom: 165px; }
+  .boarding-view { padding-bottom: 32px; }
+  .boarding-airport time { font-size: clamp(21px, 6.2vw, 25px); }
+  .boarding-ticket-stub { padding: 18px 20px; gap: 12px; }
+  .boarding-stamp { display: none; }
+  .boarding-return.compact .boarding-airport time { font-size: clamp(19px, 5.5vw, 22px); }
+  .boarding-updated { font-size: 14px; }
+  .footer-inner { padding: 20px 20px max(20px, env(safe-area-inset-bottom)); gap: 8px 20px; }
+  .footer .brand { font-size: 27px; }
+  .footer nav { width: 100%; justify-content: space-between; margin-left: 0; gap: 12px; order: 2; }
+  .footer nav a, .footer-setup { font-size: 14px; }
+  .footer p { max-width: 100%; width: 100%; font-size: 13px; order: 3; }
+  .setup-dialog { max-width: calc(100vw - 24px); }
+  .setup-dialog .dialog-cloud { display: none; }
+  .trip-state { min-height: 460px; padding: 60px 24px; }
+  .trip-state h1 { font-size: 36px; }
+  .not-found { min-height: 100svh; padding: 100px 24px 40px; }
+  .not-found > .brand { left: 24px; }
+  .not-found h1 { font-size: 36px; }
+}
+@media (max-width: 360px) {
+  .hero-actions { gap: 4px 12px; }
+  .hero-actions .button { min-width: 130px; padding: 12px 16px; }
+  .hero-actions .text-link { font-size: 12px; }
+  .hero-visual:has(.iphone-chat) { padding-top: 104px; }
+  .hero-phone-wrap { transform: translateX(-6px); }
+  .suitcase { width: 50px; height: 86px; right: -2px; }
+  .scene-copy { gap: 10px; }
+}
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 641px) {
+  .nav-inner, .hero-inner, .walkthrough, .boarding-view {
+    padding-left: max(28px, env(safe-area-inset-left));
+    padding-right: max(28px, env(safe-area-inset-right));
+  }
+  .scene:has(.iphone-chat) { min-height: 0; }
+  .scene:has(.iphone-chat) .scene-visual { position: relative; top: auto; }
+  .footer-inner { padding-bottom: max(20px, env(safe-area-inset-bottom)); }
+}
+
+.boarding-header-copy, .boarding-notice > div { min-width: 0; }
+.boarding-header h1, .boarding-updated, .stale-notice { overflow-wrap: anywhere; }
+.faq-row button:focus-visible { outline: 2px solid var(--navy); outline-offset: -4px; border-radius: 8px; }
+@media (max-width: 900px) and (max-height: 639px) {
+  .scene:has(.iphone-chat) { min-height: 0; }
+  .scene:has(.iphone-chat) .scene-visual { position: relative; top: auto; }
+}
+
+@media (min-width: 641px) and (max-width: 900px) {
+  .hero-visual:has(.iphone-chat) { padding-top: 110px; min-height: 640px; }
+  .hero-plane-trail { width: 170px; top: 0; left: 0; }
+  .hero-cloud.left { width: 100px; left: 12px; }
+}
+@media (max-height: 430px) and (min-width: 560px) {
+  .setup-dialog .dialog-close { top: 4px; right: 4px; }
+  .setup-dialog .dialog-close .icon { width: 22px; height: 22px; }
+}
+
+@media (max-width: 640px) {
+  .trip-state .state-cloud { width: 80px; left: 12px; top: 12px; }
+}
+
+/* Mobile refinements: tighter story rhythm and a full-width trip timeline. */
+@media (max-width: 640px) {
+  .hero-copy { text-align: center; }
+  .hero-actions { justify-content: center; }
+  .walkthrough { padding-top: 56px; padding-bottom: 0; }
+  .scene, .scene:nth-of-type(even) { margin-top: 24px; margin-bottom: 24px; }
+  .scene:has(.iphone-chat) .scene-visual { padding-bottom: 0; }
+  .faq-section { padding-top: 40px; }
+  .closing-plane { display: none; }
+
+  .boarding-header-copy, .boarding-updated { text-align: center; }
+  .boarding-timeline.horizontal { position: relative; }
+  .boarding-timeline.horizontal::before {
+    content: "";
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    right: 6px;
+    border-top: 2px dashed #a5d2ee;
+  }
+  .boarding-timeline.horizontal li:not(:last-child)::after { display: none; }
+  .boarding-timeline.horizontal li:nth-child(2) { text-align: center; }
+  .boarding-timeline.horizontal li:nth-child(2)::before { left: calc(50% - 6.5px); }
+  .boarding-timeline.horizontal li:last-child { text-align: right; }
+  .boarding-timeline.horizontal li:last-child::before { left: auto; right: 0; }
+
+  .boarding-layout:has(.boarding-secondary-column) { gap: 16px; }
+  .boarding-layout:has(.boarding-secondary-column) .boarding-flight-column,
+  .boarding-layout:has(.boarding-secondary-column) .boarding-secondary-column { display: contents; }
+  .boarding-layout:has(.boarding-secondary-column) .boarding-ride { order: 0; }
+  .boarding-layout:has(.boarding-secondary-column) .boarding-notice { order: 1; margin-bottom: 0; }
+  .boarding-layout:has(.boarding-secondary-column) .boarding-flight-column > .boarding-ticket { order: 2; flex: none; }
+  .boarding-layout:has(.boarding-secondary-column) .boarding-return { order: 3; margin-top: 0; }
+  .trip-page { padding-bottom: 100px; }
+  .boarding-view { padding-bottom: 20px; }
+  .boarding-updated { margin-top: 20px; }
+
+  .footer:has(.footer-tagline) .footer-inner {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+  }
+  .footer .footer-tagline {
+    grid-column: 2;
+    grid-row: 1;
+    width: auto;
+    text-align: right;
+    font-size: 14px;
+    margin: 0;
+  }
+  .footer:has(.footer-tagline) nav { grid-column: 1 / -1; grid-row: 2; }
+}
+@media (max-width: 640px) and (min-height: 640px) and (prefers-reduced-motion: no-preference) {
+  .scene:has(.iphone-chat) { min-height: calc(1000px + 20svh); }
+}
+
+@media (max-width: 640px) {
+  .footer-tagline { font-weight: 800; }
+  .hero-plane-trail { left: calc(50% - 116px); }
+  .scene, .scene:nth-of-type(even) { margin-top: 36px; margin-bottom: 36px; }
+  .closing { min-height: 0; }
+  .closing-copy { padding-bottom: 148px; }
+}
+
+/* Join the airport codes with one continuous route on the same baseline. */
+.boarding-route { display: block; }
+.boarding-route-codes { display: flex; align-items: center; gap: 16px; }
+.boarding-route-code { flex-shrink: 0; }
+.boarding-route-codes .boarding-route-trail { flex: 1; min-width: 0; padding: 0; }
+.boarding-route-details { display: flex; justify-content: space-between; gap: 16px; }
+.boarding-return.compact .boarding-route-codes { gap: 12px; }
+
+.trip-share { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.trip-share .button { align-self: center; margin-inline: auto; }
+.trip-page:has(.trip-share) { padding-bottom: 260px; }
+@media (max-width: 640px) {
+  .trip-page:has(.trip-share) { padding-bottom: 140px; }
+}
+@media (max-width: 640px) {
+  .boarding-route-codes { gap: 12px; }
+  .boarding-route-codes .boarding-route-trail { gap: 6px; }
+  .boarding-route-codes .boarding-route-trail > svg { width: 25px; height: 23px; }
+}
+@media (min-width: 641px) and (max-width: 800px) {
+  .boarding-return.compact .boarding-route-codes { gap: 8px; }
+  .boarding-return.compact .boarding-route-trail { gap: 4px; }
+  .boarding-return.compact .boarding-route-trail > svg { width: 23px; height: 21px; }
+}

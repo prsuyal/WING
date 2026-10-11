@@ -9,11 +9,11 @@ export const planningSchema = z.object({
   departureAirport: airportSchema, arrivalAirport: airportSchema,
   outboundDate: z.iso.date(), returnDate: z.iso.date(), timeZone: zoneSchema,
   budgetCents: z.number().int().nonnegative().nullable().default(null), budgetMeaning: z.literal("round_trip_airfare_per_person").default("round_trip_airfare_per_person"),
-  budgetMode: z.enum(["hard_cap", "target", "cheapest"]).default("hard_cap"),
+  budgetMode: z.enum(["hard_cap", "target", "cheapest"]).optional(),
   nonstop: z.boolean().default(false), baggage: z.enum(["personal_item", "carry_on", "checked_bag"]).default("personal_item"),
   earliestDeparture: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).optional(), latestDeparture: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).optional(),
   arrivalPreference: z.string().optional(), allowMissedCommitments: z.boolean().default(false), minLayoverSavingsCents: z.number().int().nonnegative().default(0),
-});
+}).transform((preferences) => ({ ...preferences, budgetMode: preferences.budgetMode ?? (preferences.budgetCents === null ? "cheapest" as const : "hard_cap" as const) }));
 export type Preferences = z.infer<typeof planningSchema>;
 export type Offer = z.infer<typeof offerSchema>;
 export const assumptionsSchema = z.object({ airportBufferMinutes: z.number().int().min(30).max(300).default(120), originDriveMinutes: z.number().int().min(0).max(180).default(35), landingBufferMinutes: z.number().int().min(0).max(120).default(30), minimumHomeHours: z.number().min(0).max(168).default(24) });

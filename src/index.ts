@@ -13,6 +13,7 @@ import { createHttpServer } from "./http.ts";
 import { createProfileStore } from "./profile.ts";
 import { createAgent } from "./agent.ts";
 import { createMemoryWorker } from "./memory-worker.ts";
+import { createSharingStore } from "./sharing.ts";
 
 try { loadEnvFile(); } catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
 for (const name of ["PROJECT_ID", "PROJECT_SECRET", "ANTHROPIC_API_KEY", "SUPERMEMORY_API_KEY", "SUPABASE_URL", "SUPABASE_SECRET_KEY"]) {
@@ -35,7 +36,8 @@ const recalled = createMemory(supermemory, async (namespace, evidence) => {
   if (error || !data) throw new Error("Memory owner lookup failed");
   await profiles.evidence(data.id, evidence);
 });
-const agent = createAgent(anthropic(process.env.ANTHROPIC_MODEL || "claude-sonnet-5-5"), profiles);
+const sharing = createSharingStore(client, process.env.WING_WEBSITE_URL || "http://localhost:3000");
+const agent = createAgent(anthropic(process.env.ANTHROPIC_MODEL || "claude-sonnet-5-5"), profiles, sharing);
 const handle = createHandler(agent, {
   recall: recalled.recall,
   // Only validated travel facts enter the durable indexing queue; never forward raw chat exchanges.
@@ -53,8 +55,8 @@ const app = await Spectrum({
   projectSecret: process.env.PROJECT_SECRET!,
   providers: [imessage.config()],
 });
-const server = createHttpServer();
-server.listen(Number(process.env.PORT || 3000), "0.0.0.0");
+const server = createHttpServer(sharing);
+server.listen(Number(process.env.PORT || 3001), "0.0.0.0");
 server.on("error", () => { console.error("HTTP service failed to start."); process.exit(1); });
 console.log("wing listening. Private message persistence and Supermemory enabled.");
 const memoryTimer = setInterval(() => { void indexMemories().catch(() => console.error("Memory queue unavailable; saved facts remain in Supabase.")); }, 5000);
